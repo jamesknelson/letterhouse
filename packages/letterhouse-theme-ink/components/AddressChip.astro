@@ -1,0 +1,45 @@
+---
+import { Address } from '@/model/address'
+import * as url from '@/url'
+
+import Avatar from './Avatar.astro'
+
+export interface Props {
+  relabelMyself?: boolean
+  value: Address
+}
+
+const { relabelMyself, value } = Astro.props as Props
+---
+
+<a href={url.address(value)} class="root">
+  <span class="avatar-wrapper">
+    <Avatar class="avatar" name={value.name} url={value.avatarURL} size={24} />
+  </span>
+
+  {relabelMyself && value.id === 'myself' ? 'Myself' : value.name}
+</a>
+
+<style>
+  .root {
+    display: flex;
+    align-items: center;
+    background-color: var(--color-alt-surface);
+    border-radius: 99px;
+    color: var(--color-on-alt-surface);
+    font-weight: bold;
+    padding: 0 0.75rem 0 0;
+  }
+  .root:hover {
+    color: var(--color-secondary);
+  }
+
+  .avatar-wrapper {
+    display: flex;
+    background-color: white;
+    padding: 1px;
+    margin: 2px;
+    margin-right: 8px;
+    border-radius: 99px;
+  }
+</style>

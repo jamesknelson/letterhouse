@@ -1,0 +1,16 @@
+---
+import { type Letter } from '@/model/letter'
+
+import SiteHead from './SiteHead.astro'
+
+export interface Props {
+  letter: Letter
+}
+
+const { letter } = Astro.props
+---
+
+<SiteHead
+  title={letter.title ?? `Letter from James, dated ${letter.dated}`}
+  description={letter.blurb}
+/>

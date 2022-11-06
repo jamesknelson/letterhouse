@@ -1,0 +1,20 @@
+---
+import { type Letter } from '@/model/letter'
+
+import Article from './Article.astro'
+import LetterMeta from './LetterMeta.astro'
+import Text from './Text.astro'
+
+export interface Props {
+  letter: Letter
+}
+
+const { letter } = Astro.props as Props
+---
+
+<Article class="letter full">
+  <LetterMeta letter={letter} />
+  <Text class="body vm-large">
+    <letter.Body />
+  </Text>
+</Article>

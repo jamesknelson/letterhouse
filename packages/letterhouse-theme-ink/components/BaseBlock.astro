@@ -1,0 +1,16 @@
+---
+export interface Props {
+    class: string
+}
+
+const { class: className = '' } = Astro.props as Props
+---
+<div class={`Block ${className}`}>
+    <slot />
+</div>
+
+<style>
+    .Block {
+        margin: var(--dim-block-margin-vertical) var(--dim-block-margin-horizontal);
+    }
+</style>

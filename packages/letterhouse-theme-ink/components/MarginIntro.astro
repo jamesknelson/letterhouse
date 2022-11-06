@@ -1,0 +1,41 @@
+---
+import * as site from '@/site'
+
+import Avatar from './Avatar.astro'
+import MarginSection from './MarginSection.astro'
+---
+
+<MarginSection class="author">
+  <Avatar
+    class="avatar"
+    size={128}
+    name={site.author.name}
+    url={site.author.avatarURL}
+  />
+  <site.Intro />
+</MarginSection>
+<style>
+  .author {
+    & .avatar {
+      margin-bottom: 1rem;
+    }
+    & :global(h2) {
+      font-size: 20px;
+      margin: 0.75rem 0 1rem;
+    }
+    & :global(p) {
+      margin: 0.5rem 0;
+    }
+    & :global(strong) {
+      font-weight: 700;
+    }
+    & :global(a) {
+      color: rgba(var(--rgb-primary), var(--opacity-alt));
+      text-decoration: underline;
+
+      &:hover {
+        color: var(--color-secondary);
+      }
+    }
+  }
+</style>

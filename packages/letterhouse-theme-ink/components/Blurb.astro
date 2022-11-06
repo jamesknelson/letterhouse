@@ -1,0 +1,35 @@
+---
+import { intersperse } from "ramda";
+
+export interface Props {
+  blurb: string;
+}
+
+const splitPattern = /\n{2,}/g;
+const { blurb } = Astro.props as Props;
+---
+
+<span class="blurb">
+  {
+    blurb
+      .split(splitPattern)
+      .map((para) => <p>{intersperse(<br />, para.split(/\n/g))}</p>)
+  }
+</span>
+
+<style>
+  .blurb {
+    font-weight: 600;
+    color: var(--color-primary);
+
+    &:not(:first-child) {
+      font-size: 1.125rem;
+      opacity: var(--opacity-alt);
+    }
+
+    &:first-child {
+      font-size: 1.125rem;
+      margin-top: 1.25rem;
+    }
+  }
+</style>

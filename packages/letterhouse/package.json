@@ -1,0 +1,29 @@
+{
+  "name": "letterhouse",
+  "version": "0.1.0",
+  "description": "The Letterhouse publishing toolkit",
+  "type": "module",
+  "exports": {
+    ".": "./index.ts",
+    "./integration": "./integration/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jamesknelson/letterhouse.git"
+  },
+  "author": "James K Nelson <james@jamesknelson.com>",
+  "license": "MIT",
+  "keywords": [
+    "letterhouse"
+  ],
+  "dependencies": {
+    "mem": "^9.0.2",
+    "vite": "^3.2.2"
+  },
+  "peerDependencies": {
+    "astro": ">=1.6.3"
+  },
+  "engines": {
+    "node": "^14.15.0 || >=16.0.0"
+  }
+}

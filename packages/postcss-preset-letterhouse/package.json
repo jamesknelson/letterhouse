@@ -1,0 +1,5 @@
+{
+  "name": "postcss-preset-letterhouse",
+  "version": "0.1.0",
+  "description": "PostCSS plugin for letterhouse writing toolkit"
+}

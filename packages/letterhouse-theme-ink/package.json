@@ -1,0 +1,32 @@
+{
+  "name": "letterhouse-theme-ink",
+  "version": "0.1.0",
+  "description": "A simple theme for the Letterhouse publishing toolkit",
+  "type": "module",
+  "exports": {
+    "./theme": "./theme.ts",
+    "./components": "./components.ts",
+    "./components/SiteLayout.astro": "./components/SiteLayout.astro"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jamesknelson/letterhouse.git"
+  },
+  "author": "James K Nelson <james@jamesknelson.com>",
+  "license": "MIT",
+  "keywords": [
+    "letterhouse",
+    "letterhouse-theme"
+  ],
+  "dependencies": {
+    "letterhouse": "workspace:^0.1.0",
+    "date-fns": "^2.28.0",
+    "vite": "^3.2.2"
+  },
+  "peerDependencies": {
+    "astro": ">=1.6.3"
+  },
+  "engines": {
+    "node": "^14.15.0 || >=16.0.0"
+  }
+}

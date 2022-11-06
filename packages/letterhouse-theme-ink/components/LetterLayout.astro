@@ -1,0 +1,20 @@
+---
+import { type Letter } from '@/model/letter'
+
+import LetterFull from './LetterFull.astro'
+import LetterHead from './LetterHead.astro'
+import MarginLetterActions from './MarginLetterActions.astro'
+import SiteLayout from './SiteLayout.astro'
+
+export interface Props {
+  letter: Letter
+}
+
+const { letter } = Astro.props as Props
+---
+
+<SiteLayout language="en">
+  <LetterHead letter={letter} slot="head" />
+  <LetterFull letter={letter} />
+  <MarginLetterActions letter={letter} slot="margin" />
+</SiteLayout>

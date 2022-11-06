@@ -1,0 +1,45 @@
+---
+export interface Props {
+  class?: string
+  name: string
+  url: string | null
+  size: number
+}
+
+const { class: className, name, url: photoURLProp, size } = Astro.props as Props
+const photoURL =
+  photoURLProp ??
+  `https://ui-avatars.com/api/?size=${size}&background=d8dbde&color=606672&name=${name
+    .split(/\s+/g)
+    .map(encodeURIComponent)
+    .join('+')}`
+const remote = typeof photoURL === 'string'
+---
+
+<figure class={className}>
+  {
+    remote ? (
+      <img
+        src={photoURL}
+        width={size}
+        height={size}
+        loading="lazy"
+        alt={name}
+      />
+    ) : null // <Image src={photoURL.src} width={size} height={size} />
+  }
+</figure>
+
+<style>
+  figure {
+    display: inline-flex;
+    flex-grow: 0;
+
+    & > img {
+      display: flex;
+      border-radius: 50%;
+      flex-grow: 0;
+      overflow: hidden;
+    }
+  }
+</style>

@@ -1,0 +1,71 @@
+---
+import { type Letter } from '@/model/letter'
+import * as site from '@/site'
+
+import LetterAction from './LetterAction.astro'
+import MarginSection from './MarginSection.astro'
+
+export interface Props {
+  letter: Letter
+}
+
+const { letter } = Astro.props as Props
+---
+
+<MarginSection class="letterActions">
+  <nav>
+    {
+      letter.category === 'draft' ? (
+        <>
+          <h3>This draft</h3>
+          <LetterAction
+            href={site.getEditURL(letter.file)}
+            label="Suggest a change"
+            icon="pencil"
+          />
+          <LetterAction
+            href={`mailto:${letter.from
+              .map((address) => address.email)
+              .join(',')}`}
+            label="Contact author"
+            icon="paper-plane"
+          />
+        </>
+      ) : (
+        <>
+          <h3>This letter</h3>
+          <LetterAction
+            href={`mailto:${letter.from
+              .map((address) => address.email)
+              .join(',')}`}
+            label="Reply"
+            icon="paper-plane"
+          />
+          <LetterAction href="#" label="Share" icon="megaphone" />
+          <LetterAction href="#" label="Save" icon="box" />
+          <LetterAction href="#" label="Tip" icon="trophy" />
+          <h3>Letters To The Reader</h3>
+          <LetterAction href="#" label="View" icon="eye" />
+          <LetterAction href="#" label="Subscribe" icon="bell" />
+        </>
+      )
+    }
+  </nav>
+</MarginSection>
+
+<style>
+  nav {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  h3 {
+    color: rgba(var(--rgb-on-bg), var(--opacity-peripheral));
+    margin-top: 7px;
+    margin-bottom: -0.25rem;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+</style>

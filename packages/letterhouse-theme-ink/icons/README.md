@@ -1,0 +1,1 @@
+All icons are from [Entypo+](http://www.entypo.com/).

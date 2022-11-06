@@ -1,0 +1,17 @@
+{
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2,
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "javascript.preferences.importModuleSpecifier": "non-relative",
+    "prettier.documentSelectors": ["**/*.astro"],
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "[html]": {
+      "editor.formatOnSave": false
+    },
+    "[markdown]": {
+      "editor.formatOnSave": false
+    },
+    "[json]": {
+      "editor.formatOnSave": false
+    }
+  }

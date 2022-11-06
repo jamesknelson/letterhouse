@@ -1,0 +1,1 @@
+This package contains the core Letterhouse files, including the Astro integration, model files, and io files.

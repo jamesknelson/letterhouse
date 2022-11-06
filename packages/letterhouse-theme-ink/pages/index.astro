@@ -1,0 +1,9 @@
+---
+import { getSite } from 'letterhouse'
+import { SiteLayout } from '../components'
+
+const site = await getSite()
+---
+<SiteLayout hideBrand>
+  <h1>{site.title}</h1>
+</SiteLayout>

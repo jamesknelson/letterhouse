@@ -1,0 +1,139 @@
+---
+import { type Letter } from '@/model/letter'
+import roundWordCount from '@/utils/roundWordCount'
+import * as url from '@/url'
+
+import Article from './Article.astro'
+import Blurb from './Blurb.astro'
+import LetterMeta from './LetterMeta.astro'
+
+export interface Props {
+  letter: Letter
+}
+
+const { letter } = Astro.props as Props
+---
+
+<Article class="letter brief">
+  <LetterMeta letter={letter} />
+  <div class="LetterHeader block">
+    <a href={url.letter(letter)}>
+      {letter.title && <h2 class="letter-title">{letter.title}</h2>}
+      {letter.blurb && <Blurb blurb={letter.blurb} />}
+    </a>
+  </div>
+
+  <footer>
+    <div class="block vm-none">
+      <a class="read-and-reply" href={url.letter(letter)}
+        >View&nbsp;{
+          !!letter.wordCount ? (
+            <span class="count">
+              around {roundWordCount(letter.wordCount)} words
+            </span>
+          ) : null
+        } &nbsp;&raquo;</a
+      >
+    </div>
+  </footer>
+</Article>
+
+<style>
+  .signature {
+    /* background-color: rgb(var(--color-primary-wash)); */
+    color: rgba(var(--rgb-primary), var(--opacity-alt));
+    display: inline-flex;
+    align-items: center;
+    /* padding: 0 8px; */
+
+    & .icon {
+      border-radius: 99px;
+      background-color: var(--color-primary);
+      opacity: var(--opacity-peripheral);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 12px;
+      width: 12px;
+      margin-right: 6px;
+      margin-top: 1px;
+      position: relative;
+
+      &::before {
+        border-radius: 99px;
+        content: ' ';
+        position: absolute;
+        left: 2px;
+        top: 2px;
+        background-color: white;
+        height: 8px;
+        width: 8px;
+      }
+
+      &::after {
+        border-radius: 99px;
+        content: ' ';
+        position: absolute;
+        left: 4px;
+        top: 4px;
+        background-color: var(--color-primary);
+        height: 4px;
+        width: 4px;
+      }
+    }
+
+    & .name {
+      font-family: 'Shadows Into Light', cursive;
+      font-size: 16px;
+      line-height: 16px;
+      height: 16px;
+      margin-right: 6px;
+    }
+  }
+
+  .LetterHeader.block {
+    margin-bottom: 0.75rem;
+
+    & p,
+    & h2 {
+      @media (--small) {
+        margin: 0.5rem 0;
+      }
+
+      @media (--min-medium) {
+        margin: 0.5rem 0;
+      }
+    }
+
+    & h2 {
+      font-family: Karma, Georgia, 'Times New Roman', Times, serif;
+      font-size: 1.5rem;
+      line-height: 2rem;
+      font-weight: 600;
+      margin-top: 2rem;
+      color: var(--color-primary);
+    }
+
+    & .placeholder {
+      font-style: italic;
+      font-size: 14px;
+      opacity: var(--opacity-peripheral);
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  footer {
+    padding: 0 0 2rem;
+
+    & .read-and-reply {
+      color: rgba(var(--rgb-primary), var(--opacity-alt));
+      font-size: 14px;
+      text-decoration: underline;
+
+      &:hover {
+        color: var(--color-secondary);
+      }
+    }
+  }
+</style>
