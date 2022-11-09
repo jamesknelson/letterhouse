@@ -7,7 +7,6 @@ export function getGitCurrentBranch(): Promise<string | null> {
   return new Promise((resolve, reject) =>
     exec('git rev-parse --abbrev-ref HEAD', (err, stdout, stderr) => {
       if (!err && typeof stdout === 'string') {
-        console.error('pass!')
         resolve(stdout.trim())
       } else if (stderr.includes('not a git repository')) {
         resolve(null)

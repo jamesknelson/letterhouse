@@ -7,6 +7,6 @@ export default defineConfig({
   integrations: [
     letterhouseIntegration({
       theme,
-    })
-  ]
-});
+    }),
+  ],
+})

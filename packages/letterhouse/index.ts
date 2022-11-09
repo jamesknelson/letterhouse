@@ -14,5 +14,6 @@ export * from './types/markdown'
 
 export * from './url'
 
+export * from './utils/defineTheme'
 export * from './utils/notFoundError'
 export * from './utils/roundWordCount'

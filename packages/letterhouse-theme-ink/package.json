@@ -6,7 +6,9 @@
   "exports": {
     "./theme": "./theme.ts",
     "./components": "./components.ts",
-    "./components/SiteLayout.astro": "./components/SiteLayout.astro"
+    "./components/SiteLayout.astro": "./components/SiteLayout.astro",
+    "./styles/global.css": "./styles/global.css",
+    "./styles/root.css": "./styles/root.css"
   },
   "repository": {
     "type": "git",

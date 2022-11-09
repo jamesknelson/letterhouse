@@ -11,8 +11,9 @@
     "resolveJsonModule": true,
     "importHelpers": true,
 
-    "allowJs": false,
     "strict": true,
+    "allowJs": false,
+    "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "incremental": true,
 
