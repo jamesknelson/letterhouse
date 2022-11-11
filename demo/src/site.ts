@@ -1,6 +1,6 @@
 import { createGithubEditURLGetter, getAddress } from 'letterhouse'
 
-export { default as intro } from './widgets/intro.md'
+export { default as intro } from './widgets/intro.mdx'
 
 export const author = await getAddress('myself')
 export const title = 'James K Nelson'
@@ -21,10 +21,6 @@ export const menu = [
     label: 'Address Book',
     href: '/address-book',
   },
-  // {
-  //   label: 'Offers',
-  //   href: '/offers',
-  // },
   {
     label: 'About',
     href: '/about',

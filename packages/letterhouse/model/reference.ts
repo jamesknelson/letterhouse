@@ -1,20 +1,46 @@
 import { Address } from './address'
 
-export type ReferenceKind = 'book' | 'tweet' | 'letter' | 'web' | 'youtube'
-// as all reference require a source URL, before adding topic
-// support, I probably should have a /topics route that we can reference as
-// the source, and possibly a /content/topics directory so the site owner can
-// write their own notes on topics
-// | 'topic'
+// Specifies the different levels of reference, going from most to least proof.
+export type ReferenceType =
+  // You're referencing yourself, and you have a URL to show where (hopefully
+  // timestamped and signed, but it's not necessary).
+  | 'self'
+  // You have a digital signature proving that the "from" address said what you
+  // claim. This means you *can* host the content yourself if you'd like, or can
+  // link to the original.
+  | 'signed'
+  // You have a URL that showed the "from" address publishing the claimed content
+  // at a known date. This could be a HTTP or IPFS url, but cannot be an
+  // internal URL for your own site.
+  | 'external'
+  // You have a reference to printed content that the reader can use to prove
+  // that the "from" address published what we claim.
+  | 'print'
+  // You're saying that the "from" address said this at a given date, but you'll
+  // need to trust us.
+  | 'hearsay'
+  // You're replying to a general topic, without claiming that anybody said
+  // anything in particular.
+  | 'topic'
 
 export interface Reference {
-  type: 'reference'
-  kind: ReferenceKind
-  sourceURL: string
-  iconURL: string
-  label: string
+  kind: 'reference'
 
-  author?: Address
-  embedURL?: string
-  title?: string
+  type: ReferenceType
+
+  url: string
+
+  title: string
+  icon: string
+
+  // This should be the date the content was published by the authors - as
+  // opposed to the date we found/crawled it.
+  dated?: string
+
+  from: Address[]
+
+  // As most reference types typically don't include an address, it's possible
+  // to omit the address here. However, you can still include this field if
+  // you'd like to specify who the referenced material was addressed to.
+  to?: Address[]
 }

@@ -2,6 +2,7 @@
 import type { Letter } from 'letterhouse'
 
 import Article from './Article.astro'
+import LetterBlockquote from './LetterBlockquote.astro'
 import LetterMeta from './LetterMeta.astro'
 import Text from './Text.astro'
 
@@ -15,6 +16,6 @@ const { letter } = Astro.props as Props
 <Article class="letter full">
   <LetterMeta letter={letter} />
   <Text class="body vm-large">
-    <letter.Body />
+    <letter.Body components={{ blockquote: LetterBlockquote }} />
   </Text>
 </Article>

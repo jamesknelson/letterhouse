@@ -20,8 +20,12 @@ import {
 import { type AddressDefinition, defineAddress } from './addressDefinition'
 
 export async function getOrDefineAddress(
-  definition: AddressDefinition,
+  definition: Address | AddressDefinition,
 ): Promise<Address> {
+  if (typeof definition !== 'string' && definition.kind === 'address') {
+    return definition
+  }
+
   try {
     return getAddress(definition as string)
   } catch (error) {
@@ -115,12 +119,12 @@ function createAddressFromModules(
   maybeAvatarModule?: AvatarModule,
 ): Address {
   return {
-    type: 'address',
+    kind: 'address',
     id,
     ...profileModule.frontmatter,
     avatarURL:
       maybeAvatarModule?.default ??
       getDefaultAddressAvatarURL(profileModule.frontmatter.name),
-    Notes: profileModule.Content,
+    Notes: profileModule.Content ?? undefined,
   }
 }

@@ -1,6 +1,8 @@
 import { Address } from './address'
 
 export interface Site {
+  kind: 'site'
+
   author: Address
   blurb?: string
   language: string

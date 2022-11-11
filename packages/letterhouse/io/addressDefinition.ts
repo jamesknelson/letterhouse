@@ -6,6 +6,7 @@ import { humanize } from '../utils/humanize'
 export type AddressDefinition = string | AddressDefinitionObject
 
 export interface AddressDefinitionObject {
+  kind?: never
   name: string
 }
 
@@ -14,11 +15,11 @@ function unmemoizedDefineAddress(definition: AddressDefinition): Address {
     const name = humanize(definition)
 
     return {
-      type: 'address',
+      kind: 'address',
       name,
       id: null,
       avatarURL: getDefaultAddressAvatarURL(name),
-      Notes: null,
+      Notes: undefined,
     }
   } else {
     // TODO: validate
@@ -26,9 +27,9 @@ function unmemoizedDefineAddress(definition: AddressDefinition): Address {
     return {
       avatarURL: getDefaultAddressAvatarURL(definition.name),
       ...definition,
-      type: 'address',
+      kind: 'address',
       id: null,
-      Notes: null,
+      Notes: undefined,
     }
   }
 }

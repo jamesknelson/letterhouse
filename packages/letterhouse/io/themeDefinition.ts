@@ -58,6 +58,7 @@ export async function defineTheme(
   ])
 
   return {
+    kind: 'theme',
     pages,
     stylesheets,
   }

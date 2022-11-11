@@ -24,7 +24,7 @@ const formattedDate = date && format(date, 'yyyy/LL/dd')
 
 <header>
   <div class="address-and-date">
-    {!toMyself && (
+    {letter.category === 'received' && (
       <div class="pair">
         <h3>From</h3>
         <ul>
@@ -58,6 +58,18 @@ const formattedDate = date && format(date, 'yyyy/LL/dd')
         </ul>
       </div>
     )}
+    {!toMyself && letter.category !== 'received' && (
+      <div class="pair">
+        <h3>From</h3>
+        <ul>
+          {letter.from.map((address) => (
+            <li>
+              <AddressChip value={address} />
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
     <div class="space"></div>
     <div class="date pair">
       <h3>Dated</h3>
@@ -72,17 +84,21 @@ const formattedDate = date && format(date, 'yyyy/LL/dd')
       )}
     </div>
   </div>
-  <div class="re">
-    <h3>Re</h3>
-    <ul>
-      <li>
-        <a href="https://twitter.com/BarackObama/status/896523232098078720">
-          <Icon class="icon" name="twitter" />
-          Tweet on 2017, August 13
-        </a>
-      </li>
-    </ul>
-  </div>
+  {!!letter.re.length && (
+    <div class="re">
+      <h3>Re</h3>
+      <ul>
+        {letter.re.map((reference) => (
+          <li>
+            <a href={reference.url}>
+              <Icon class="icon" name={reference.icon} />
+              {reference.title}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )}
 </header>
 
 <style>

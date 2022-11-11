@@ -1,4 +1,5 @@
 import { MarkdownHeading } from 'astro'
+import { uniq } from 'ramda'
 
 import { type Letter } from '../model/letter'
 import { type AstroContent } from '../types/astro'
@@ -60,28 +61,38 @@ export async function getLetterFromModuleAndPath(
     cc: contentCC,
     re: contentRe,
     title: contentTitle,
+    blurb = null,
     quotes,
-    blurb = quotes.find((quote) => quote.blurb)?.text ?? null,
     wordCount,
   } = module.frontmatter
 
-  const fromDefs = contentFrom ? ensureTruthyArray(contentFrom) : [pathFrom]
-  const toDefs = contentTo ? ensureTruthyArray(contentTo) : [pathTo]
-  const ccDefs = ensureTruthyArray(contentCC)
-  const reDefs = ensureTruthyArray(contentRe)
+  const reDefs = contentRe ? ensureTruthyArray(contentRe) : getDefaultRe(quotes)
+  const re = await Promise.all(reDefs.map((def) => defineReference(def)))
+  const reFrom = uniq(re.flatMap((reference) => reference.from))
 
+  const fromDefs = contentFrom ? ensureTruthyArray(contentFrom) : [pathFrom]
+  const toDefs = contentTo
+    ? ensureTruthyArray(contentTo)
+    : reFrom.length
+    ? reFrom
+    : [pathTo]
+
+  const toPromise = Promise.all(toDefs.map((def) => getOrDefineAddress(def)))
   const fromPromise = Promise.all(
     fromDefs.map((def) => getOrDefineAddress(def)),
   )
-  const toPromise = Promise.all(toDefs.map((def) => getOrDefineAddress(def)))
-  const ccPromise = Promise.all(ccDefs.map((def) => getOrDefineAddress(def)))
-
-  const rePromise = Promise.all(reDefs.map((def) => defineReference(def)))
 
   const from = await fromPromise
   const to = await toPromise
-  const cc = await ccPromise
-  const re = await rePromise
+
+  const ccDefs = contentCC
+    ? ensureTruthyArray(contentCC)
+    : category === 'received' ||
+      to.find((address) => address.id === 'the-reader')
+    ? []
+    : ['the-reader']
+
+  const cc = await Promise.all(ccDefs.map((def) => getOrDefineAddress(def)))
 
   if ((from[0].id ?? 'enclosed') !== pathFrom) {
     throw new TypeError(
@@ -95,7 +106,7 @@ export async function getLetterFromModuleAndPath(
   }
 
   return {
-    type: 'letter',
+    kind: 'letter',
     id,
     file: path.file,
     category,
@@ -106,8 +117,13 @@ export async function getLetterFromModuleAndPath(
     cc,
     re,
     wordCount,
+    quotes,
     blurb,
     title: contentTitle || module.getHeadings()?.[0]?.text,
     Body: module.Content,
   }
+}
+
+function getDefaultRe(quotes: MarkdownQuote[]): ReferenceDefinition[] {
+  return quotes.map((quote) => quote.meta)
 }

@@ -3,10 +3,8 @@ import { type AstroContent } from '../types/astro'
 import { type Address } from './address'
 import { type Reference } from './reference'
 
-export type LetterCategory = 'sent' | 'received' | 'draft'
-
 export interface Letter {
-  type: 'letter'
+  kind: 'letter'
 
   category: LetterCategory
 
@@ -42,5 +40,14 @@ export interface Letter {
 
   wordCount: number
 
+  quotes: LetterQuote[]
+
   Body: AstroContent
+}
+
+export type LetterCategory = 'sent' | 'received' | 'draft'
+
+export interface LetterQuote {
+  text: string
+  re?: string
 }

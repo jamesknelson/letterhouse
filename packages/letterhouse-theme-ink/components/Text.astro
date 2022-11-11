@@ -14,136 +14,88 @@ const { class: className = '' } = Astro.props as Props
   .Text.block {
     position: relative;
 
-    & * {
+    & .md {
       word-wrap: break-word;
       font-family: Karla;
     }
 
-    & blockquote {
-      position: relative;
-      color: rgba(var(--color-on-surface), var(--opacity-alt));
-      margin-top: 2rem;
-      margin-bottom: 2rem;
-      padding: 0.5rem 1.5rem;
-
-      &::before {
-        content: ' ';
-        z-index: 0;
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        border: 1px solid var(--color-surface-border);
-        border-radius: 4px;
-      }
-
-      &::after {
-        content: '“';
-        position: absolute;
-        left: -0.5rem;
-        top: 0;
-        height: 100%;
-        width: 1rem;
-        padding-top: 2rem;
-        font-size: 3rem;
-        text-align: center;
-        box-sizing: border-box;
-      }
-
-      & > p {
-        position: relative;
-        z-index: 1;
-      }
-    }
-
     /* blurb quote */
-    & h1 + blockquote,
-    & blockquote:first-child {
+    & p.md.blurb {
       color: var(--color-primary);
       font-weight: 600;
       opacity: 0.9;
       margin-top: -0.5rem;
       margin-bottom: 1.5rem;
       padding: 0;
-
-      &::before,
-      &::after {
-        display: none;
-      }
-
-      & > p {
-        margin: 0;
-        white-space: pre-line;
-        font-size: 1.125rem;
-      }
+      white-space: pre-line;
+      font-size: 1.125rem;
     }
 
-    & h1,
-    & h2,
-    & h3,
-    & h4,
-    & h5,
-    & h6 {
+    & h1.md,
+    & h2.md,
+    & h3.md,
+    & h4.md,
+    & h5.md,
+    & h6.md {
       &,
       * {
         font-family: Karma;
       }
     }
 
-    & strong {
+    & strong.md {
       font-weight: bold;
     }
 
-    & em {
+    & em.md {
       font-style: italic;
     }
 
-    & code,
-    & pre {
+    & code.md,
+    & pre.md {
       /* background-color: var(--color-alt-surface) !important; */
     }
 
-    & code {
+    & code.md {
       /* color: var(--color-on-surface); */
       font-family: monospace;
       font-size: 95%;
       padding: 0.15em;
     }
 
-    & ol,
-    & ul {
+    & ol.md,
+    & ul.md {
       padding-left: 30px;
     }
 
-    & p,
-    & h1,
-    & h2,
-    & h3,
-    & h4,
-    & h5,
-    & h6,
-    & ul,
-    & ol,
-    & img,
-    & pre,
-    & hr,
-    & blockquote {
+    & p.md,
+    & h1.md,
+    & h2.md,
+    & h3.md,
+    & h4.md,
+    & h5.md,
+    & h6.md,
+    & ul.md,
+    & ol.md,
+    & img.md,
+    & pre.md,
+    & hr.md,
+    & blockquote.md {
       font-size: 1rem;
       line-height: 1.5rem;
       margin: 1rem 0;
     }
 
-    & img {
+    & img.md {
       display: block;
       max-width: 100%;
       border-radius: 4px;
     }
-    & p > img {
+    & p.md > img.md {
       margin: 0;
     }
 
-    & hr {
+    & hr.md {
       left: 33% !important;
       margin: 1.5rem 1rem;
       position: relative;
@@ -152,45 +104,45 @@ const { class: className = '' } = Astro.props as Props
       background-color: var(--color-surface-line);
     }
 
-    & h1,
-    & h1 a,
-    & h2,
-    & h2 a {
+    & h1.md,
+    & h1.md a.md,
+    & h2.md,
+    & h2.md a.md {
       color: var(--color-primary);
       font-family: Karma;
     }
 
-    & h1 {
+    & h1.md {
       font-size: 2rem;
       line-height: 2rem;
       font-weight: 600;
       margin-top: 2rem;
     }
 
-    & h2 {
+    & h2.md {
       line-height: 1.5rem;
       font-weight: 600;
       font-size: 1.5rem;
       margin-top: 3rem;
     }
 
-    & h3 {
+    & h3.md {
       font-size: 22px;
       line-height: 2rem;
       font-weight: 600;
     }
 
-    & h4,
-    & h5,
-    & h6 {
+    & h4.md,
+    & h5.md,
+    & h6.md {
       font-size: 20px;
       line-height: 1.5rem;
       font-weight: 600;
       margin-top: 1rem;
     }
 
-    & p a,
-    & li a {
+    & p.md a.md,
+    & li.md a.md {
       color: var(--color-primary);
       text-decoration: underline;
 

@@ -1,7 +1,6 @@
-import mem from 'mem'
+import type { Reference } from '../model/reference'
 
-import { type Address } from '../model/address'
-import { type Reference, type ReferenceKind } from '../model/reference'
+import mem from 'mem'
 
 export type ReferenceDefinition =
   | ReferenceDefinitionString
@@ -9,38 +8,62 @@ export type ReferenceDefinition =
 
 // TODO: should have different fields for different types
 export interface ReferenceDefinitionObject {
-  kind: ReferenceKind
-  label: string
-  sourceURL: string
-
-  author?: Address
-  embedURL?: string
+  href?: string
   title?: string
+  icon?: string
+  dated?: string
+  from?: string
+  to?: string
 }
 
 export type ReferenceDefinitionString = string
 
-async function defineReferenceFromString(
-  definition: ReferenceDefinitionString,
-): Promise<Reference> {
-  if (definition.startsWith('@')) {
-  } else if (definition) {
+async function getReferenceDefinitionObjectFromString(
+  def: ReferenceDefinitionString,
+): Promise<ReferenceDefinitionObject> {
+  if (def !== 'https://twitter.com/BarackObama/status/896523232098078720') {
+    throw new Error('Unimplemented')
+  }
+
+  return {
+    href: 'https://twitter.com/BarackObama/status/896523232098078720',
+    title: '"No one is born hating..."',
   }
 }
 
 async function unmemoizedDefineReference(
   definition: ReferenceDefinition,
 ): Promise<Reference> {
-  if (typeof definition === 'string') {
-    return {
-      type: 'reference',
-    }
-  } else {
-    // TODO: validate
+  const rdo =
+    typeof definition === 'string'
+      ? await getReferenceDefinitionObjectFromString(definition)
+      : definition
 
-    return {
-      type: 'reference',
-    }
+  if (
+    rdo.href !== 'https://twitter.com/BarackObama/status/896523232098078720' ||
+    !rdo.title
+  ) {
+    throw new Error('Unimplemented')
+  }
+
+  return {
+    kind: 'reference',
+    type: 'external',
+
+    url: 'https://twitter.com/BarackObama/status/896523232098078720',
+    title: rdo.title,
+    icon: 'twitter',
+    dated: '2017/08/13',
+    from: [
+      {
+        kind: 'address',
+        name: 'Barack Obama',
+        id: null,
+        avatarURL:
+          'https://pbs.twimg.com/profile_images/1329647526807543809/2SGvnHYV_x96.jpg',
+        twitter: 'BarackObama',
+      },
+    ],
   }
 }
 
