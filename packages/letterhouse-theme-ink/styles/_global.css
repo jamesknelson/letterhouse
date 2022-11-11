@@ -1,4 +1,37 @@
-@import "./reset.css";
-@import "./blocks.css";
 @import "./fonts.css";
 @import "./variables.css";
+
+* {
+  appearance: none;
+  border: 0;
+  box-sizing: inherit;
+  -webkit-font-smoothing: auto;
+  font-weight: inherit;
+  margin: 0;
+  outline: 0;
+  padding: 0;
+  text-decoration: none;
+  text-rendering: optimizeLegibility;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.block {
+  margin-top: var(--dim-block-margin-vertical);
+  margin-bottom: var(--dim-block-margin-vertical);
+  padding-left: var(--dim-block-margin-horizontal);
+  padding-right: var(--dim-block-margin-horizontal);
+
+  &.vm-large {
+      margin-top: var(--dim-block-margin-vertical-large);
+      margin-bottom: var(--dim-block-margin-vertical-large);
+  }
+  &.vm-small {
+      margin-top: var(--dim-block-margin-vertical-small);
+      margin-bottom: var(--dim-block-margin-vertical-small);
+  }
+  &.vm-none {
+      margin-top: 0;
+      margin-bottom: 0;
+  }
+}

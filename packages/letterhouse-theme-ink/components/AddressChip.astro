@@ -1,6 +1,7 @@
 ---
-import { Address } from '@/model/address'
-import * as url from '@/url'
+import type { Address } from 'letterhouse'
+
+import { url } from 'letterhouse'
 
 import Avatar from './Avatar.astro'
 
@@ -10,9 +11,10 @@ export interface Props {
 }
 
 const { relabelMyself, value } = Astro.props as Props
+const href = value.id ? url.address(value) : '#'
 ---
 
-<a href={url.address(value)} class="root">
+<a href={href} class="root">
   <span class="avatar-wrapper">
     <Avatar class="avatar" name={value.name} url={value.avatarURL} size={24} />
   </span>

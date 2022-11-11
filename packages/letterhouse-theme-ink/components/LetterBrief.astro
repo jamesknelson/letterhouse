@@ -1,7 +1,7 @@
 ---
-import { type Letter } from '@/model/letter'
-import roundWordCount from '@/utils/roundWordCount'
-import * as url from '@/url'
+import type { Letter } from 'letterhouse'
+
+import { roundWordCount, url } from 'letterhouse'
 
 import Article from './Article.astro'
 import Blurb from './Blurb.astro'
@@ -26,14 +26,12 @@ const { letter } = Astro.props as Props
   <footer>
     <div class="block vm-none">
       <a class="read-and-reply" href={url.letter(letter)}
-        >View&nbsp;{
-          !!letter.wordCount ? (
-            <span class="count">
-              around {roundWordCount(letter.wordCount)} words
-            </span>
-          ) : null
-        } &nbsp;&raquo;</a
-      >
+        >View {!!letter.wordCount ? (
+          <span class="count">
+            around {roundWordCount(letter.wordCount)} words
+          </span>
+        ) : null} &raquo;
+      </a>
     </div>
   </footer>
 </Article>

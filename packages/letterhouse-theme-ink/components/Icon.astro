@@ -1,0 +1,11 @@
+---
+import icon from '../icons'
+
+const { name, title, ...props } = Astro.props
+const svg = await icon(name, props)
+---
+
+<svg
+  {...svg.props}
+  data-icon={name}
+  set:html={(title ? `<title>${title}</title>` : '') + svg.innerHTML}></svg>

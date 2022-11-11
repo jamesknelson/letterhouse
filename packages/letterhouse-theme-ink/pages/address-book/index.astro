@@ -1,0 +1,15 @@
+---
+import '../../styles/_root.css'
+import '../../styles/_global.css'
+
+import { getAddressBook, getSite } from 'letterhouse'
+
+import SiteLayout from '../../components/SiteLayout.astro'
+
+const site = await getSite()
+const addressBook = await getAddressBook()
+---
+
+<SiteLayout site={site}>
+  <h1>Address Book</h1>
+</SiteLayout>

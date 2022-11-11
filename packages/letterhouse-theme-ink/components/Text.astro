@@ -22,24 +22,38 @@ const { class: className = '' } = Astro.props as Props
     & blockquote {
       position: relative;
       color: rgba(var(--color-on-surface), var(--opacity-alt));
-      margin-top: 1.5rem;
-      margin-bottom: 1.5rem;
-      padding-left: 2rem;
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+      padding: 0.5rem 1.5rem;
 
       &::before {
+        content: ' ';
+        z-index: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        border: 1px solid var(--color-surface-border);
+        border-radius: 4px;
+      }
+
+      &::after {
         content: '“';
         position: absolute;
-        left: 0;
+        left: -0.5rem;
+        top: 0;
         height: 100%;
         width: 1rem;
-        font-size: 2rem;
+        padding-top: 2rem;
+        font-size: 3rem;
         text-align: center;
-        padding-top: 0.5rem;
         box-sizing: border-box;
       }
 
       & > p {
-        margin-left: 0 !important;
+        position: relative;
+        z-index: 1;
       }
     }
 
@@ -49,11 +63,12 @@ const { class: className = '' } = Astro.props as Props
       color: var(--color-primary);
       font-weight: 600;
       opacity: 0.9;
-      padding-left: 0;
       margin-top: -0.5rem;
       margin-bottom: 1.5rem;
+      padding: 0;
 
-      &::before {
+      &::before,
+      &::after {
         display: none;
       }
 
@@ -117,6 +132,15 @@ const { class: className = '' } = Astro.props as Props
       font-size: 1rem;
       line-height: 1.5rem;
       margin: 1rem 0;
+    }
+
+    & img {
+      display: block;
+      max-width: 100%;
+      border-radius: 4px;
+    }
+    & p > img {
+      margin: 0;
     }
 
     & hr {

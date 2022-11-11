@@ -1,11 +1,24 @@
 ---
-import { getSite } from 'letterhouse'
-import { SiteLayout } from '../components'
-
+import '../styles/_root.css'
 import '../styles/_global.css'
 
+import { getSent, getSite } from 'letterhouse'
+
+import BlurbList from '../components/BlurbList.astro'
+import MarginIntro from '../components/MarginIntro.astro'
+import Masthead from '../components/Masthead.astro'
+import SiteLayout from '../components/SiteLayout.astro'
+
 const site = await getSite()
+let sentLetters = await getSent()
+
+let lettersSentToTheReader = sentLetters.filter((letter) =>
+  letter.to.concat(letter.cc).find((address) => address.id === 'the-reader'),
+)
 ---
-<SiteLayout hideBrand>
-  <h1>{site.title}</h1>
+
+<SiteLayout hideBrand site={site}>
+  <Masthead slot="hero" title={site.title} />
+  <BlurbList letters={lettersSentToTheReader} />
+  <MarginIntro site={site} slot="margin" />
 </SiteLayout>

@@ -1,0 +1,30 @@
+---
+import '../../styles/_root.css'
+import '../../styles/_global.css'
+
+import type { Address } from 'letterhouse'
+
+import { getAddressBook } from 'letterhouse'
+
+import AddressLayout from '../../components/AddressLayout.astro'
+
+export async function getStaticPaths() {
+  const addresses = await getAddressBook()
+  console.log(addresses)
+  return addresses.map((address) => ({
+    params: {
+      slug: address.id,
+    },
+    props: { address },
+  }))
+}
+
+export interface Props {
+  address: Address
+}
+
+// All paginated data is passed on the "page" prop
+const { address } = Astro.props as Props
+---
+
+<AddressLayout address={address} />

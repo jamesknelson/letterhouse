@@ -1,4 +1,4 @@
-export default function roundWordCount(wordCount: number): number {
+export function roundWordCount(wordCount: number): number {
   if (wordCount < 101) {
     return Math.round((wordCount + 10) / 10) * 10
   } else if (wordCount < 350) {

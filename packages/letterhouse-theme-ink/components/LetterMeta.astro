@@ -1,10 +1,11 @@
 ---
-import { format } from 'date-fns'
+import type { Letter } from 'letterhouse'
 
-import { type Letter } from '@/model/letter'
-import * as url from '@/url'
+import { format } from 'date-fns'
+import { url } from 'letterhouse'
 
 import AddressChip from './AddressChip.astro'
+import Icon from './Icon.astro'
 
 export interface Props {
   letter: Letter
@@ -23,62 +24,65 @@ const formattedDate = date && format(date, 'yyyy/LL/dd')
 
 <header>
   <div class="address-and-date">
-    {
-      !toMyself && (
-        <div class="pair">
-          <h3>From</h3>
-          <ul>
-            {letter.from.map((address) => (
-              <li>
-                <AddressChip value={address} />
-              </li>
-            ))}
-          </ul>
-        </div>
-      )
-    }
-    <div class="pair">
-      <h3>To{toMyself && ' myself'}</h3>
-      <ul>
-        {
-          letter.to.map((address) => (
+    {!toMyself && (
+      <div class="pair">
+        <h3>From</h3>
+        <ul>
+          {letter.from.map((address) => (
             <li>
               <AddressChip value={address} />
             </li>
-          ))
-        }
+          ))}
+        </ul>
+      </div>
+    )}
+    <div class="pair">
+      <h3>To{toMyself && ' myself'}</h3>
+      <ul>
+        {letter.to.map((address) => (
+          <li>
+            <AddressChip value={address} />
+          </li>
+        ))}
       </ul>
     </div>
+    {!!letter.cc.length && (
+      <div class="pair">
+        <h3>CC</h3>
+        <ul>
+          {letter.cc.map((address) => (
+            <li>
+              <AddressChip value={address} />
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
     <div class="space"></div>
     <div class="date pair">
       <h3>Dated</h3>
-      {
-        formattedDate ? (
-          <time datetime={formattedDate} class="date">
-            {formattedDate}
-          </time>
-        ) : (
-          <a class="draft" href={url.draftIndex()}>
-            draft
-          </a>
-        )
-      }
+      {formattedDate ? (
+        <time datetime={formattedDate} class="date">
+          {formattedDate}
+        </time>
+      ) : (
+        <a class="draft" href={url.draftIndex()}>
+          draft
+        </a>
+      )}
     </div>
   </div>
-  {
-    formattedDate && formattedDate < '2022/08/24' && (
-      <div class="re">
-        <h3>Re</h3>
-        <ul>
-          <li>
-            <a href="https://www.eurekalert.org/news-releases/654287">
-              Bad Mileage: 98 tons of plants per gallon
-            </a>
-          </li>
-        </ul>
-      </div>
-    )
-  }
+  <div class="re">
+    <h3>Re</h3>
+    <ul>
+      <li>
+        <a href="https://twitter.com/BarackObama/status/896523232098078720">
+          <Icon class="icon" name="twitter" />
+          Tweet on 2017, August 13
+        </a>
+      </li>
+    </ul>
+  </div>
 </header>
 
 <style>
@@ -132,10 +136,17 @@ const formattedDate = date && format(date, 'yyyy/LL/dd')
 
     & a {
       color: rgb(var(--rgb-primary), var(--opacity-alt));
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
       line-height: 1.5rem;
       padding-left: 0.25rem;
       border: currentColor solid 1px;
+
+      & .icon {
+        width: 16px;
+        height: 16px;
+        margin-right: 4px;
+      }
 
       &:hover {
         color: var(--color-secondary);

@@ -1,0 +1,27 @@
+---
+import type { Letter } from 'letterhouse'
+
+import LetterBrief from './LetterBrief.astro'
+
+export interface Props {
+  letters: Letter[]
+}
+
+const { letters } = Astro.props as Props
+---
+<>
+{
+  [...letters.values()].map((letter) => (
+      <>
+        <LetterBrief letter={letter} />
+        <div class="gap" />
+      </>
+    ))
+}
+</>
+
+<style>
+  .gap {
+    height: 1.5rem;
+  }
+</style>

@@ -1,10 +1,13 @@
 ---
+import type { Site } from 'letterhouse'
+
 import { getSite } from 'letterhouse'
 
 import SiteHead from './SiteHead.astro'
 
 export interface Props {
   hideBrand?: boolean
+  site?: Site
 }
 
 export interface MenuItem {
@@ -12,9 +15,7 @@ export interface MenuItem {
   label: string
 }
 
-const site = await getSite()
-
-const { hideBrand } = Astro.props
+const { hideBrand, site = await getSite() } = Astro.props as Props
 const { author, blurb = null, language, menu, title } = site
 ---
 
@@ -30,27 +31,23 @@ const { author, blurb = null, language, menu, title } = site
     <div id="site">
       <header>
         <div class="inner">
-          {
-            hideBrand ? (
-              <div />
-            ) : (
-              <div class="site-title">
-                <h1>
-                  <a href="/">{title}</a>
-                </h1>
-              </div>
-            )
-          }
+          {hideBrand ? (
+            <div />
+          ) : (
+            <div class="site-title">
+              <h1>
+                <a href="/">{title}</a>
+              </h1>
+            </div>
+          )}
 
           <nav class="site-menu">
             <ul>
-              {
-                menu.map((item) => (
-                  <li>
-                    <a href={item.href}>{item.label}</a>
-                  </li>
-                ))
-              }
+              {menu.map((item) => (
+                <li>
+                  <a href={item.href}>{item.label}</a>
+                </li>
+              ))}
             </ul>
           </nav>
         </div>

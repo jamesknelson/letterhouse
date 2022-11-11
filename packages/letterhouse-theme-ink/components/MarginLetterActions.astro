@@ -1,55 +1,53 @@
 ---
-import { type Letter } from '@/model/letter'
-import * as site from '@/site'
+import type { Letter, Site } from 'letterhouse'
 
 import LetterAction from './LetterAction.astro'
 import MarginSection from './MarginSection.astro'
 
 export interface Props {
   letter: Letter
+  site: Site
 }
 
-const { letter } = Astro.props as Props
+const { letter, site } = Astro.props as Props
+
+const editURL = await site.editURLGetter?.(letter.file)
 ---
 
 <MarginSection class="letterActions">
   <nav>
-    {
-      letter.category === 'draft' ? (
-        <>
-          <h3>This draft</h3>
-          <LetterAction
-            href={site.getEditURL(letter.file)}
-            label="Suggest a change"
-            icon="pencil"
-          />
-          <LetterAction
-            href={`mailto:${letter.from
-              .map((address) => address.email)
-              .join(',')}`}
-            label="Contact author"
-            icon="paper-plane"
-          />
-        </>
-      ) : (
-        <>
-          <h3>This letter</h3>
-          <LetterAction
-            href={`mailto:${letter.from
-              .map((address) => address.email)
-              .join(',')}`}
-            label="Reply"
-            icon="paper-plane"
-          />
-          <LetterAction href="#" label="Share" icon="megaphone" />
-          <LetterAction href="#" label="Save" icon="box" />
-          <LetterAction href="#" label="Tip" icon="trophy" />
-          <h3>Letters To The Reader</h3>
-          <LetterAction href="#" label="View" icon="eye" />
-          <LetterAction href="#" label="Subscribe" icon="bell" />
-        </>
-      )
-    }
+    {letter.category === 'draft' ? (
+      <>
+        <h3>This draft</h3>
+        {editURL && (
+          <LetterAction href={editURL} label="Suggest a change" icon="pencil" />
+        )}
+        <LetterAction
+          href={`mailto:${letter.from
+            .map((address) => address.email)
+            .join(',')}`}
+          label="Contact author"
+          icon="paper-plane"
+        />
+      </>
+    ) : (
+      <>
+        <h3>This letter</h3>
+        <LetterAction
+          href={`mailto:${letter.from
+            .map((address) => address.email)
+            .join(',')}`}
+          label="Reply"
+          icon="paper-plane"
+        />
+        <LetterAction href="#" label="Share" icon="megaphone" />
+        <LetterAction href="#" label="Save" icon="box" />
+        <LetterAction href="#" label="Tip" icon="trophy" />
+        <h3>Letters To The Reader</h3>
+        <LetterAction href="#" label="View" icon="eye" />
+        <LetterAction href="#" label="Subscribe" icon="bell" />
+      </>
+    )}
   </nav>
 </MarginSection>
 

@@ -1,5 +1,5 @@
 ---
-import { type Letter } from '@/model/letter'
+import type { Letter, Site } from 'letterhouse'
 
 import LetterFull from './LetterFull.astro'
 import LetterHead from './LetterHead.astro'
@@ -8,13 +8,14 @@ import SiteLayout from './SiteLayout.astro'
 
 export interface Props {
   letter: Letter
+  site: Site
 }
 
-const { letter } = Astro.props as Props
+const { letter, site } = Astro.props as Props
 ---
 
-<SiteLayout language="en">
+<SiteLayout>
   <LetterHead letter={letter} slot="head" />
   <LetterFull letter={letter} />
-  <MarginLetterActions letter={letter} slot="margin" />
+  <MarginLetterActions letter={letter} site={site} slot="margin" />
 </SiteLayout>

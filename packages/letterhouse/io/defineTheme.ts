@@ -6,8 +6,24 @@ import { fileURLToPath } from 'node:url'
 
 import { Theme } from '../model/theme'
 
+// TODO:
+// - find all pages in the theme's /pages directory and export them
+// - error if required pages (e.g. /sent/[slug], /address-book/[slug]) aren't there
+// - validate input against a schema
+
 export const defaultPages = {
   '/': './pages/index.astro',
+
+  '/address-book': './pages/address-book/index.astro',
+  '/address-book/[slug]': './pages/address-book/[slug].astro',
+
+  '/draft': './pages/draft/index.astro',
+  '/draft/[slug]': './pages/draft/[slug].astro',
+
+  '/received': './pages/received/index.astro',
+  '/received/[slug]': './pages/received/[slug].astro',
+
+  '/sent/[slug]': './pages/sent/[slug].astro',
 }
 export const defaultStylesheets = {
   global: './styles/_global.css',
@@ -20,9 +36,6 @@ export async function defineTheme(
   definitionURL: string,
   definition: ThemeDefinition,
 ): Promise<Theme> {
-  // TODO:
-  // - validate input against a schema
-
   const src = resolve(fileURLToPath(definitionURL), '..')
 
   const definitionStylesheets = definition.stylesheets || {}

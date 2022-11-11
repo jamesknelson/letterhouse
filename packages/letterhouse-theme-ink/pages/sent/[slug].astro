@@ -1,0 +1,31 @@
+---
+import '../../styles/_root.css'
+import '../../styles/_global.css'
+
+import type { Letter, Site } from 'letterhouse'
+
+import { getSent, getSite } from 'letterhouse'
+
+import LetterLayout from '../../components/LetterLayout.astro'
+
+export async function getStaticPaths() {
+  const site = await getSite()
+  const letters = await getSent()
+  return letters.map((letter) => ({
+    params: {
+      slug: letter.slug ?? letter.dated,
+    },
+    props: { letter, site },
+  }))
+}
+
+export interface Props {
+  letter: Letter
+  site: Site
+}
+
+// All paginated data is passed on the "page" prop
+const { letter, site } = Astro.props as Props
+---
+
+<LetterLayout letter={letter} site={site} />

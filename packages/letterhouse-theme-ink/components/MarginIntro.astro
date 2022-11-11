@@ -1,8 +1,14 @@
 ---
-import * as site from '@/site'
+import type { Site } from 'letterhouse'
 
 import Avatar from './Avatar.astro'
 import MarginSection from './MarginSection.astro'
+
+export interface Props {
+  site: Site
+}
+
+const { site } = Astro.props as Props
 ---
 
 <MarginSection class="author">
@@ -12,7 +18,7 @@ import MarginSection from './MarginSection.astro'
     name={site.author.name}
     url={site.author.avatarURL}
   />
-  <site.Intro />
+  <site.intro />
 </MarginSection>
 <style>
   .author {
