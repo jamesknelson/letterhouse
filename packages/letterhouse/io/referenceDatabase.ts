@@ -1,13 +1,12 @@
 import type { Reference } from '../model/reference'
 
-import mem from 'mem'
-
+// If a string is passed in, the string is treated as the id.
 export type ReferenceDefinition =
   | ReferenceDefinitionString
   | ReferenceDefinitionObject
 
-// TODO: should have different fields for different types
 export interface ReferenceDefinitionObject {
+  id: string
   href?: string
   title?: string
   icon?: string
@@ -15,6 +14,10 @@ export interface ReferenceDefinitionObject {
   from?: string
   to?: string
 }
+
+// TODO:
+// - if called w/ a previously defined href, return the previous definition,
+//   ignoring any other parameters.
 
 export type ReferenceDefinitionString = string
 
@@ -26,14 +29,17 @@ async function getReferenceDefinitionObjectFromString(
   }
 
   return {
+    id: 'https://twitter.com/BarackObama/status/896523232098078720',
     href: 'https://twitter.com/BarackObama/status/896523232098078720',
     title: '"No one is born hating..."',
   }
 }
 
-async function unmemoizedDefineReference(
+// TODO:
+// - this should merge any existing data for the specified id with new data
+export async function defineReference(
   definition: ReferenceDefinition,
-): Promise<Reference> {
+): Promise<void> {
   const rdo =
     typeof definition === 'string'
       ? await getReferenceDefinitionObjectFromString(definition)
@@ -45,13 +51,18 @@ async function unmemoizedDefineReference(
   ) {
     throw new Error('Unimplemented')
   }
+}
 
+export async function getOrDefineReference(
+  definition: ReferenceDefinition,
+): Promise<Reference> {
   return {
     kind: 'reference',
     type: 'external',
 
+    id: 'https://twitter.com/BarackObama/status/896523232098078720',
     url: 'https://twitter.com/BarackObama/status/896523232098078720',
-    title: rdo.title,
+    title: '"No one is born hating..."',
     icon: 'twitter',
     dated: '2017/08/13',
     from: [
@@ -67,4 +78,25 @@ async function unmemoizedDefineReference(
   }
 }
 
-export const defineReference = mem(unmemoizedDefineReference)
+export async function getReference(id: string): Promise<Reference> {
+  return {
+    kind: 'reference',
+    type: 'external',
+
+    id: 'https://twitter.com/BarackObama/status/896523232098078720',
+    url: 'https://twitter.com/BarackObama/status/896523232098078720',
+    title: '"No one is born hating..."',
+    icon: 'twitter',
+    dated: '2017/08/13',
+    from: [
+      {
+        kind: 'address',
+        name: 'Barack Obama',
+        id: null,
+        avatarURL:
+          'https://pbs.twimg.com/profile_images/1329647526807543809/2SGvnHYV_x96.jpg',
+        twitter: 'BarackObama',
+      },
+    ],
+  }
+}

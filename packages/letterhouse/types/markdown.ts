@@ -1,7 +1,8 @@
 export interface MarkdownQuote {
   index: number
   text: string
-  meta: {
+  reference: {
+    id: string
     href?: string
     title?: string
     dated?: string

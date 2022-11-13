@@ -1,11 +1,11 @@
 import { toString } from 'mdast-util-to-string'
-import { fromPairs } from 'ramda'
 import { visit, SKIP } from 'unist-util-visit'
 
 import type { RehypePlugin } from '../types/astro'
 import type { MarkdownQuote } from '../types/markdown'
 
-const quoteMetaLinePattern = /^\s*(dated|from|href|title|to):\s+(.*)\s*$/i
+export const rehypePlugins = [rehypeQuotes, rehypeFrontmatterWordCount]
+export const remarkPlugins = []
 
 // Extract quote-related metadata and add it to both the frontmatter, and to
 // the blockquote's attributes where appropriate.
@@ -61,10 +61,10 @@ function rehypeQuotes(): RehypePlugin {
           return [SKIP, i]
         } else {
           const index = quoteIndex++
-          const quote: MarkdownQuote = {
+          const quote = {
             index,
             text,
-            meta: {},
+            reference: {},
           }
 
           data.astro.frontmatter.quotes.push(quote)
@@ -95,7 +95,7 @@ function rehypeQuotes(): RehypePlugin {
             const lines = toString(node).split('\n')
 
             for (const line of lines) {
-              const match = line.match(quoteMetaLinePattern)
+              const match = line.match(quoteReferenceLinePattern)
               if (!match) {
                 return
               }
@@ -109,15 +109,17 @@ function rehypeQuotes(): RehypePlugin {
             return
           }
 
-          const meta =
+          const reference =
             data.astro.frontmatter.quotes[
               data.astro.frontmatter.quotes.length - 1
-            ].meta
+            ].reference
 
           for (const [key, value] of pairs) {
-            lastBlockquote.properties['data-' + key] = value
-            meta[key] = value
+            reference[key] = value
           }
+
+          reference.id = getReferenceId(reference)
+          lastBlockquote.properties['data-reference-id'] = reference.id
 
           parent.children.splice(i, 1)
           return [SKIP, i]
@@ -133,5 +135,9 @@ function rehypeFrontmatterWordCount(): RehypePlugin {
   }
 }
 
-export const rehypePlugins = [rehypeQuotes, rehypeFrontmatterWordCount]
-export const remarkPlugins = []
+function getReferenceId(meta: any): string {
+  return meta.id ?? meta.href
+}
+
+const quoteReferenceLinePattern =
+  /^\s*(id|dated|from|href|title|to):\s+(.*)\s*$/i

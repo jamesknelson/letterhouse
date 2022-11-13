@@ -1,18 +1,18 @@
+import type { Letter } from '../model/letter'
+import type { AstroContent } from '../types/astro'
+
+import type { AddressDefinition } from './addressDefinition'
+import type { LetterPath } from './letterPath'
+import type { ReferenceDefinition } from './referenceDatabase'
+
 import { MarkdownHeading } from 'astro'
 import { uniq } from 'ramda'
 
-import { type Letter } from '../model/letter'
-import { type AstroContent } from '../types/astro'
 import { MarkdownQuote } from '../types/markdown'
 import { ensureTruthyArray } from '../utils/ensureTruthyArray'
 
-import { type AddressDefinition } from './addressDefinition'
 import { getOrDefineAddress } from './addressGetters'
-import { type LetterPath } from './letterPath'
-import {
-  type ReferenceDefinition,
-  defineReference,
-} from './referenceDefinition'
+import { defineReference, getOrDefineReference } from './referenceDatabase'
 
 export interface LetterModule {
   Content: AstroContent
@@ -66,8 +66,20 @@ export async function getLetterFromModuleAndPath(
     wordCount,
   } = module.frontmatter
 
-  const reDefs = contentRe ? ensureTruthyArray(contentRe) : getDefaultRe(quotes)
-  const re = await Promise.all(reDefs.map((def) => defineReference(def)))
+  // Define all quote references before defining any `re` references (including
+  // a default), so that any data specified in quotes will be available in the
+  // Reference objects on the letter.re array.
+  await Promise.all(
+    quotes
+      .map((quote) => quote.reference)
+      .filter(Boolean)
+      .map(defineReference),
+  )
+
+  const reDefs = contentRe
+    ? ensureTruthyArray(contentRe)
+    : quotes.map((quote) => quote.reference)
+  const re = await Promise.all(reDefs.map((def) => getOrDefineReference(def)))
   const reFrom = uniq(re.flatMap((reference) => reference.from))
 
   const fromDefs = contentFrom ? ensureTruthyArray(contentFrom) : [pathFrom]
@@ -77,10 +89,10 @@ export async function getLetterFromModuleAndPath(
     ? reFrom
     : [pathTo]
 
-  const toPromise = Promise.all(toDefs.map((def) => getOrDefineAddress(def)))
   const fromPromise = Promise.all(
     fromDefs.map((def) => getOrDefineAddress(def)),
   )
+  const toPromise = Promise.all(toDefs.map((def) => getOrDefineAddress(def)))
 
   const from = await fromPromise
   const to = await toPromise
@@ -122,8 +134,4 @@ export async function getLetterFromModuleAndPath(
     title: contentTitle || module.getHeadings()?.[0]?.text,
     Body: module.Content,
   }
-}
-
-function getDefaultRe(quotes: MarkdownQuote[]): ReferenceDefinition[] {
-  return quotes.map((quote) => quote.meta)
 }

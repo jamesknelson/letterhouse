@@ -1,5 +1,6 @@
 TODO
 
+- in letter io, find all quote references and define them
 - implement getReference so that it fetches from/to/date/title from urls and caches the results,
   alongside the cached contents, headers, and time of fetch
 - If only a "href: " field is specified, we can try and automatically
@@ -7,6 +8,9 @@ TODO
   re: block.
 - If from: to: date: title: are specified, they'll be used as the defaults for any
   matching re: href.
+
+- figure out why styles are messed up on production build
+- replace "block" classes with raw styles using variables
 
 - for briefs of letters w/ no blurb, automatically generate some snippet that can be used instead
 - export a HTML version of the blurb, alongside the current text version
@@ -39,6 +43,11 @@ TODO
 
 - implement Address Book page, and styled contact pages
 
-- replace "block" classes with raw styles using variables
-
 - remove title, blurb, and quoted text from word count
+
+- implement actions
+
+- each tweet in a thread will need a unique reference;
+  the letter io can figure out if multiple tweets are
+  from the same thread and create a new threat reference for the re:
+  tag if necessary.

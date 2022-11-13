@@ -1,26 +1,14 @@
 ---
-import { defineReference } from 'letterhouse'
+import { getReference } from 'letterhouse'
 
 import { format } from 'date-fns'
 
 import AddressChip from './AddressChip.astro'
 import Icon from './Icon.astro'
 
-const {
-  'data-dated': dataDated,
-  'data-from': dataFrom,
-  'data-href': dataHref,
-  'data-title': dataTitle,
-  'data-to': dataTo,
-} = Astro.props
+const { 'data-reference-id': referenceId } = Astro.props
 
-const reference = await defineReference({
-  dated: dataDated,
-  from: dataFrom,
-  href: dataHref,
-  title: dataTitle,
-  to: dataTo,
-})
+const reference = await getReference(referenceId)
 
 const toMyself =
   reference.from.length === 1 &&
@@ -102,13 +90,13 @@ const formattedDate =
 
     blockquote {
       position: relative;
-      color: rgba(var(--color-on-surface), var(--opacity-alt));
+      color: rgba(var(--rgb-on-surface), var(--opacity-alt));
       padding: 0 1.5rem 0.5rem;
       margin: 0;
     }
 
     h3 {
-      color: rgba(var(--color-on-surface), var(--opacity-peripheral));
+      color: rgba(var(--rgb-on-surface), var(--opacity-peripheral));
       font-size: 0.8rem;
       text-transform: uppercase;
       line-height: 0.8rem;
@@ -130,10 +118,10 @@ const formattedDate =
     }
 
     .date {
-      color: rgba(var(--color-on-surface), var(--opacity-peripheral));
+      color: rgba(var(--rgb-on-surface), var(--opacity-peripheral));
     }
     .draft {
-      color: rgba(var(--color-on-surface), var(--opacity-placeholder));
+      color: rgba(var(--rgb-on-surface), var(--opacity-placeholder));
 
       &:hover {
         color: var(--color-secondary);

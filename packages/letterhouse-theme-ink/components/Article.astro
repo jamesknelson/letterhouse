@@ -14,10 +14,9 @@ const { class: className = '' } = Astro.props as Props
   article {
     background-color: var(--color-surface);
     border: 1px solid var(--color-surface-border);
-    color: rgb(var(--color-on-surface));
-    box-shadow:
-      0 0 2px 0px rgba(var(--color-primary-wash), 0.75),
-      0 0 10px rgba(var(--color-primary-wash), 0.75),
-      0 0 10px rgba(var(--color-primary-wash), 0.33) inset;
+    color: rgb(var(--rgb-on-surface));
+    box-shadow: 0 0 2px 0px rgba(var(--rgb-primary-wash), 0.75),
+      0 0 10px rgba(var(--rgb-primary-wash), 0.75),
+      0 0 10px rgba(var(--rgb-primary-wash), 0.33) inset;
   }
 </style>

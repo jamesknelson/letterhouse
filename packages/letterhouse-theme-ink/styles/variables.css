@@ -1,38 +1,67 @@
 :root {
-  --color-bg: #fbfcff;
+  /*
+   * Colors
+   */
+
+  --rgb-bg: 251, 252, 255;
+  --color-bg: rgb(var(--rgb-bg));
   --rgb-on-bg: 12, 14, 16;
-  --color-on-bg: #0c0e10;
+  --color-on-bg: rgb(var(--rgb-on-bg));
 
   --rgb-primary: 30, 60, 91;
   --color-primary: rgb(var(--rgb-primary));
-  --color-on-primary: #03070a;
-  --color-primary-wash: 242, 246, 253;
-  --color-on-primary-wash: 3, 7, 10;
+  --rgb-on-primary: 3, 7, 10;
+  --color-on-primary: rgb(var(--rgb-on-primary));
+  --rgb-primary-wash: 242, 246, 253;
+  --color-primary-wash: rgb(var(--rgb-primary-wash));
+  --rgb-on-primary-wash: 3, 7, 10;
+  --color-on-primary-wash: rgb(var(--rgb-on-primary-wash));
 
-  --color-secondary: #0123e3;
-  --color-on-secondary: #f2f4ff;
-  --color-secondary-wash: #d7ddff;
-  --color-on-secondary-wash: #000628;
+  --rgb-secondary: 1, 35, 227;
+  --color-secondary: rgb(var(--rgb-secondary));
+  --rgb-on-secondary: 242, 244, 255;
+  --color-on-secondary: rgb(var(--rgb-on-secondary));
+  --rgb-secondary-wash: 215, 221, 255;
+  --color-secondary-wash: rgb(var(--rgb-secondary-wash));
+  --rgb-on-secondary-wash: 0, 6, 40;
+  --color-on-secondary-wash: rgb(var(--rgb-on-secondary-wash));
 
-  --color-surface: #ffffff;
-  --color-surface-line: #f7f8f9;
-  --color-surface-border: #eff1f3;
-  --color-on-surface: 12, 14, 16;
+  --rgb-surface: 255, 255, 255;
+  --color-surface: rgb(var(--rgb-surface));
+  --rgb-surface-line: 247, 248, 249;
+  --color-surface-line: rgb(var(--rgb-surface-line));
+  --rgb-surface-border: 239, 241, 243;
+  --color-surface-border: rgb(var(--rgb-surface-border));
+  --rgb-on-surface: 12, 14, 16;
+  --color-on-surface: rgb(var(--color-on-surface));
 
-  --color-alt-surface: #f0f1f2;
-  --color-on-alt-surface: #5d6369;
+  --rgb-alt-surface: 240, 241, 242;
+  --color-alt-surface: rgb(var(--rgb-alt-surface));
+  --rgb-on-alt-surface: 93, 99, 105;
+  --color-on-alt-surface: rgb(var(--rgb-on-alt-surface));
+
+  /*
+   * Opacities
+   */
 
   --opacity-alt: 0.83;
   --opacity-peripheral: 0.5;
   --opacity-placeholder: 0.32;
 
+  /*
+   * Dimensions
+   */
+
   --dim-rem-to-px: 16;
+
   --dim-block-margin-vertical: 1rem;
   --dim-block-margin-vertical-small: 0.75rem;
   --dim-block-margin-vertical-large: 1.5rem;
+
   @media (--small) {
     --dim-block-margin-horizontal: 1rem;
   }
+
   @media (--min-medium) {
     --dim-block-margin-horizontal: 2rem;
   }
