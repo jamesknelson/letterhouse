@@ -1,12 +1,12 @@
 export interface MarkdownQuote {
   index: number
   text: string
-  reference: {
+  work: {
     id: string
     href?: string
     title?: string
     dated?: string
-    from?: string
+    authors?: string
     to?: string
   }
 }

@@ -1,7 +1,8 @@
-import { type AstroContent } from '../types/astro'
+import type { AstroContent } from '../types/astro'
 
-import { type Address } from './address'
-import { type Reference } from './reference'
+import type { Address } from './address'
+import type { Attribution } from './attribution'
+import type { Work } from './work'
 
 export interface Letter {
   kind: 'letter'
@@ -16,14 +17,15 @@ export interface Letter {
   // An undated letter is considered a draft.
   dated: null | string
 
-  // If not specified, will be extracted from the letetr id by default.
-  from: Address[]
+  // If not specified, will be extracted from the letter id by default.
+  authors: Attribution[]
+
   to: Address[]
   cc: Address[]
 
-  // A list of letters, #hashtags or URLs that this letter either responds to or
-  // revises, empty by default.
-  re: Reference[]
+  // A list of works, #hashtags or text descriptions of what subject this
+  // letter is addressing.
+  re: LetterRegarding[]
 
   // An optional key which can be used for human-readable URLs.
   slug: string | null
@@ -49,5 +51,10 @@ export type LetterCategory = 'sent' | 'received' | 'draft'
 
 export interface LetterQuote {
   text: string
-  re?: string
+  work?: Work
 }
+
+export type LetterRegarding =
+  | { type: 'topic'; value: string }
+  | { type: 'text'; value: string }
+  | { type: 'work'; value: Work }

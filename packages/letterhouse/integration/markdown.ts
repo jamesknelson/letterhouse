@@ -2,7 +2,6 @@ import { toString } from 'mdast-util-to-string'
 import { visit, SKIP } from 'unist-util-visit'
 
 import type { RehypePlugin } from '../types/astro'
-import type { MarkdownQuote } from '../types/markdown'
 
 export const rehypePlugins = [rehypeQuotes, rehypeFrontmatterWordCount]
 export const remarkPlugins = []
@@ -64,7 +63,7 @@ function rehypeQuotes(): RehypePlugin {
           const quote = {
             index,
             text,
-            reference: {},
+            work: {},
           }
 
           data.astro.frontmatter.quotes.push(quote)
@@ -99,7 +98,7 @@ function rehypeQuotes(): RehypePlugin {
             const lines = toString(node).split('\n')
 
             for (const line of lines) {
-              const match = line.match(quoteReferenceLinePattern)
+              const match = line.match(quoteMetaLinePattern)
               if (!match) {
                 return
               }
@@ -113,17 +112,17 @@ function rehypeQuotes(): RehypePlugin {
             return
           }
 
-          const reference =
+          const work =
             data.astro.frontmatter.quotes[
               data.astro.frontmatter.quotes.length - 1
-            ].reference
+            ].work
 
           for (const [key, value] of pairs) {
-            reference[key] = value
+            work[key] = value
           }
 
-          reference.id = getReferenceId(reference)
-          lastBlockquote.properties['data-reference-id'] = reference.id
+          work.id = getWorkId(work)
+          lastBlockquote.properties['data-work-id'] = work.id
 
           parent.children.splice(i, 1)
           return [SKIP, i]
@@ -139,9 +138,8 @@ function rehypeFrontmatterWordCount(): RehypePlugin {
   }
 }
 
-function getReferenceId(meta: any): string {
+function getWorkId(meta: any): string {
   return meta.id ?? meta.href
 }
 
-const quoteReferenceLinePattern =
-  /^\s*(id|dated|from|href|title|to):\s+(.*)\s*$/i
+const quoteMetaLinePattern = /^\s*(id|dated|authors|href|title|to):\s+(.*)\s*$/i

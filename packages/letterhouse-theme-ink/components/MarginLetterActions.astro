@@ -23,8 +23,8 @@ const editURL = await site.editURLGetter?.(letter.file)
           <LetterAction href={editURL} label="Suggest a change" icon="pencil" />
         )}
         <LetterAction
-          href={`mailto:${letter.from
-            .map((address) => address.email)
+          href={`mailto:${letter.authors
+            .map(({ address }) => address.email)
             .join(',')}`}
           label="Contact author"
           icon="paper-plane"
@@ -34,8 +34,8 @@ const editURL = await site.editURLGetter?.(letter.file)
       <>
         <h3>This letter</h3>
         <LetterAction
-          href={`mailto:${letter.from
-            .map((address) => address.email)
+          href={`mailto:${letter.authors
+            .map(({ address }) => address.email)
             .join(',')}`}
           label="Reply"
           icon="paper-plane"

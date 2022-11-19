@@ -15,9 +15,9 @@ const { letter } = Astro.props as Props
 
 const date = letter.dated && new Date(letter.dated)
 const toMyself =
-  letter.from.length === 1 &&
+  letter.authors.length === 1 &&
   letter.to.length === 1 &&
-  letter.from[0].id === 'myself' &&
+  letter.authors[0].address.id === 'myself' &&
   letter.to[0].id === 'myself'
 const formattedDate = date && format(date, 'yyyy/LL/dd')
 ---
@@ -28,7 +28,7 @@ const formattedDate = date && format(date, 'yyyy/LL/dd')
       <div class="pair">
         <h3>From</h3>
         <ul>
-          {letter.from.map((address) => (
+          {letter.authors.map(({ address }) => (
             <li>
               <AddressChip value={address} />
             </li>
@@ -76,14 +76,19 @@ const formattedDate = date && format(date, 'yyyy/LL/dd')
     <div class="re">
       <h3>Re</h3>
       <ul>
-        {letter.re.map((reference) => (
-          <li>
-            <a href={reference.url}>
-              <Icon class="icon" name={reference.icon} />
-              {reference.title}
-            </a>
-          </li>
-        ))}
+        {letter.re.map(
+          (re) =>
+            re.type === 'work' && (
+              <li>
+                <a href={re.value.url || '#'}>
+                  {re.value.platform && (
+                    <Icon class="icon" name={re.value.platform} />
+                  )}
+                  {re.value.title}
+                </a>
+              </li>
+            ),
+        )}
       </ul>
     </div>
   )}

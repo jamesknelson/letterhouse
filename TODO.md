@@ -8,6 +8,7 @@ TODO
   re: block.
 - If from: to: date: title: are specified, they'll be used as the defaults for any
   matching re: href.
+- rename "references" to "works"
 
 - for briefs of letters w/ no blurb, automatically generate some snippet that can be used instead
 - export a HTML version of the blurb, alongside the current text version

@@ -8,6 +8,7 @@ export type AddressDefinition = string | AddressDefinitionObject
 export interface AddressDefinitionObject {
   kind?: never
   name: string
+  twitter?: string
 }
 
 function unmemoizedDefineAddress(definition: AddressDefinition): Address {

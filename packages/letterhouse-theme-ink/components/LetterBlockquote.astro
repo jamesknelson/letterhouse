@@ -1,19 +1,19 @@
 ---
-import { getReference } from 'letterhouse'
+import { getWork } from 'letterhouse'
 
 import { format } from 'date-fns'
 
 import AddressChip from './AddressChip.astro'
 import Icon from './Icon.astro'
 
-const { 'data-reference-id': referenceId } = Astro.props
+const { 'data-work-id': workId } = Astro.props
 
-const reference = await getReference(referenceId)
+const reference = await getWork(workId)
 
 const toMyself =
-  reference.from.length === 1 &&
+  reference.authors.length === 1 &&
   reference.to?.length === 1 &&
-  reference.from[0].id === 'myself' &&
+  reference.authors[0].address.id === 'myself' &&
   reference.to[0].id === 'myself'
 const formattedDate =
   reference.dated && format(new Date(reference.dated), 'yyyy/LL/dd')
@@ -26,7 +26,7 @@ const formattedDate =
         <div class="pair">
           <h3>From</h3>
           <ul>
-            {reference.from.map((address) => (
+            {reference.authors.map(({ address }) => (
               <li>
                 <AddressChip value={address} />
               </li>
@@ -36,7 +36,7 @@ const formattedDate =
       )}
       {reference.to && (
         <div class="pair">
-          <h3>To{toMyself && ' myself'}</h3>
+          <h3>{toMyself && 'From and '}To</h3>
           <ul>
             {reference.to.map((address) => (
               <li>
@@ -55,13 +55,17 @@ const formattedDate =
           </time>
         </div>
       )}
-      <div class="divider"></div>
-      <div class="via pair">
-        <h3>Via</h3>
-        <a class="icon" href={reference.url} target="_blank">
-          <Icon name={reference.icon} />
-        </a>
-      </div>
+      {reference.platform && (
+        <>
+          <div class="divider" />
+          <div class="via pair">
+            <h3>Via</h3>
+            <a class="icon" href={reference.url} target="_blank">
+              <Icon name={reference.platform} />
+            </a>
+          </div>
+        </>
+      )}
     </header>
     <blockquote>
       <slot />

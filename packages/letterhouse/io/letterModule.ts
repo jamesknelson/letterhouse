@@ -1,18 +1,19 @@
-import type { Letter } from '../model/letter'
+import type { Letter, LetterRegarding } from '../model/letter'
 import type { AstroContent } from '../types/astro'
 
 import type { AddressDefinition } from './addressDefinition'
 import type { LetterPath } from './letterPath'
-import type { ReferenceDefinition } from './referenceDatabase'
+import type { WorkDefinition } from './workDatabase'
 
 import { MarkdownHeading } from 'astro'
 import { uniq } from 'ramda'
 
 import { MarkdownQuote } from '../types/markdown'
 import { ensureTruthyArray } from '../utils/ensureTruthyArray'
+import { isURL } from '../utils/isURL'
 
 import { getOrDefineAddress } from './addressGetters'
-import { defineReference, getOrDefineReference } from './referenceDatabase'
+import { getOrDefineWork } from './workDatabase'
 
 export interface LetterModule {
   Content: AstroContent
@@ -20,11 +21,39 @@ export interface LetterModule {
   frontmatter: LetterModuleFrontmatter
 }
 
+async function getLetterRegardingFromDefinition(
+  def: any,
+): Promise<LetterRegarding> {
+  if (typeof def === 'string') {
+    if (def.startsWith('#')) {
+      return {
+        type: 'topic',
+        value: def,
+      }
+    } else if (isURL(def)) {
+      return {
+        type: 'work',
+        value: await getOrDefineWork({ href: def }),
+      }
+    } else {
+      return {
+        type: 'text',
+        value: def,
+      }
+    }
+  }
+
+  return {
+    type: 'work',
+    value: await getOrDefineWork(def),
+  }
+}
+
 export interface LetterModuleFrontmatter {
   from?: AddressDefinition | AddressDefinition[]
   to?: AddressDefinition | AddressDefinition[]
   cc?: AddressDefinition | AddressDefinition[]
-  re?: ReferenceDefinition | ReferenceDefinition[]
+  re?: WorkDefinition | WorkDefinition[]
   title?: string
   blurb?: string
   quotes: MarkdownQuote[]
@@ -53,48 +82,59 @@ export async function getLetterFromModuleAndPath(
   module: LetterModule,
   path: LetterPath,
 ): Promise<Letter> {
-  const { id, category, slug, dated, from: pathFrom, to: pathTo } = path
+  const { id, category, slug, dated, from: pathAuthors, to: pathTo } = path
 
   const {
-    from: contentFrom,
+    from: contentAuthors,
     to: contentTo,
     cc: contentCC,
     re: contentRe,
     title: contentTitle,
     blurb = null,
-    quotes,
+    quotes: contentQuotes,
     wordCount,
   } = module.frontmatter
 
-  // Define all quote references before defining any `re` references (including
-  // a default), so that any data specified in quotes will be available in the
-  // Reference objects on the letter.re array.
-  await Promise.all(
-    quotes
-      .map((quote) => quote.reference)
-      .filter(Boolean)
-      .map(defineReference),
+  const quotes = await Promise.all(
+    contentQuotes.map(async (quote) => {
+      const work = quote.work && (await getOrDefineWork(quote.work))
+      return {
+        text: quote.text,
+        work,
+      }
+    }),
   )
 
   const reDefs = contentRe
     ? ensureTruthyArray(contentRe)
-    : quotes.map((quote) => quote.reference)
-  const re = await Promise.all(reDefs.map((def) => getOrDefineReference(def)))
-  const reFrom = uniq(re.flatMap((reference) => reference.from))
+    : quotes.map((quote) => quote.work)
+  const re = await Promise.all(reDefs.map(getLetterRegardingFromDefinition))
+  const reAuthorAddresses = uniq(
+    re.flatMap((reference) =>
+      reference.type === 'work'
+        ? reference.value.authors.map((attribution) => attribution.address)
+        : [],
+    ),
+  )
 
-  const fromDefs = contentFrom ? ensureTruthyArray(contentFrom) : [pathFrom]
+  const authorDefs = contentAuthors
+    ? ensureTruthyArray(contentAuthors)
+    : [pathAuthors]
   const toDefs = contentTo
     ? ensureTruthyArray(contentTo)
-    : reFrom.length
-    ? reFrom
+    : reAuthorAddresses.length
+    ? reAuthorAddresses
     : [pathTo]
 
-  const fromPromise = Promise.all(
-    fromDefs.map((def) => getOrDefineAddress(def)),
+  const authorsPromise = await Promise.all(
+    authorDefs.map(async (def) => ({
+      kind: 'attribution' as const,
+      address: await getOrDefineAddress(def),
+    })),
   )
   const toPromise = Promise.all(toDefs.map((def) => getOrDefineAddress(def)))
 
-  const from = await fromPromise
+  const authors = await authorsPromise
   const to = await toPromise
 
   const ccDefs = contentCC
@@ -106,9 +146,9 @@ export async function getLetterFromModuleAndPath(
 
   const cc = await Promise.all(ccDefs.map((def) => getOrDefineAddress(def)))
 
-  if ((from[0].id ?? 'enclosed') !== pathFrom) {
+  if ((authors[0].address.id ?? 'enclosed') !== pathAuthors) {
     throw new TypeError(
-      `Letter "${id}" is missing "${pathFrom}" from its frontmatter's "from" field.`,
+      `Letter "${id}" is missing "${pathAuthors}" from its frontmatter's "from" field.`,
     )
   }
   if ((to[0].id ?? 'enclosed') !== pathTo) {
@@ -124,7 +164,7 @@ export async function getLetterFromModuleAndPath(
     category,
     slug,
     dated,
-    from,
+    authors,
     to,
     cc,
     re,
