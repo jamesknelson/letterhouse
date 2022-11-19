@@ -24,7 +24,7 @@ const formattedDate = date && format(date, 'yyyy/LL/dd')
 
 <header>
   <div class="address-and-date">
-    {letter.category === 'received' && (
+    {!toMyself && letter.category !== 'received' && (
       <div class="pair">
         <h3>From</h3>
         <ul>
@@ -37,7 +37,7 @@ const formattedDate = date && format(date, 'yyyy/LL/dd')
       </div>
     )}
     <div class="pair">
-      <h3>To{toMyself && ' myself'}</h3>
+      <h3>{toMyself && 'From and '}To</h3>
       <ul>
         {letter.to.map((address) => (
           <li>
@@ -51,18 +51,6 @@ const formattedDate = date && format(date, 'yyyy/LL/dd')
         <h3>CC</h3>
         <ul>
           {letter.cc.map((address) => (
-            <li>
-              <AddressChip value={address} />
-            </li>
-          ))}
-        </ul>
-      </div>
-    )}
-    {!toMyself && letter.category !== 'received' && (
-      <div class="pair">
-        <h3>From</h3>
-        <ul>
-          {letter.from.map((address) => (
             <li>
               <AddressChip value={address} />
             </li>

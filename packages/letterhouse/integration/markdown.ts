@@ -81,8 +81,12 @@ function rehypeQuotes(): RehypePlugin {
           paragraphsVisitedSinceLastBlockquote === 1
         ) {
           const pairs = [] as [string, string][]
-          if (node.children.length === 1 && node.children[0].tagName === 'a') {
-            const anchorNode = node.children[0]
+          if (
+            node.children.length === 2 &&
+            node.children[0].value === '@' &&
+            node.children[1].tagName === 'a'
+          ) {
+            const anchorNode = node.children[1]
             const href = anchorNode.properties.href.trim()
             const text = toString(anchorNode).trim()
 
