@@ -10,7 +10,6 @@ import AddressLayout from '../../components/AddressLayout.astro'
 
 export async function getStaticPaths() {
   const addresses = await getAddressBook()
-  console.log(addresses)
   return addresses.map((address) => ({
     params: {
       slug: address.id,

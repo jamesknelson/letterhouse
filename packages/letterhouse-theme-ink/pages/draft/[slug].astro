@@ -11,12 +11,6 @@ import LetterLayout from '../../components/LetterLayout.astro'
 export async function getStaticPaths() {
   const site = await getSite()
   const letters = await getDrafts()
-  console.log(
-    letters.map(
-      (letter) =>
-        letter.slug ?? (letter.to[0].id ? `to-${letter.to[0].id}` : 'wip'),
-    ),
-  )
   return letters.map((letter) => ({
     params: {
       slug: letter.slug ?? (letter.to[0].id ? `to-${letter.to[0].id}` : 'wip'),
