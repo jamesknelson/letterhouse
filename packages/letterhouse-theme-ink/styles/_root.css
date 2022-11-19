@@ -1,1 +1,8 @@
-@import "./media.css";
+@custom-media --x-small all and (max-width: 359px);
+@custom-media --small all and (max-width: 767px);
+@custom-media --min-medium all and (min-width: 768px);
+@custom-media --medium all and (min-width: 768px) and (max-width: 999px);
+@custom-media --max-medium all and (max-width: 999px);
+@custom-media --large all and (min-width: 1000px);
+@custom-media --x-large all and (min-width: 1200px);
+

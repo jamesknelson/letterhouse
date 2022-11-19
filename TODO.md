@@ -9,9 +9,6 @@ TODO
 - If from: to: date: title: are specified, they'll be used as the defaults for any
   matching re: href.
 
-- figure out why styles are messed up on production build
-- replace "block" classes with raw styles using variables
-
 - for briefs of letters w/ no blurb, automatically generate some snippet that can be used instead
 - export a HTML version of the blurb, alongside the current text version
 - add a test letter with no title/blurb, and check that the brief just shows the chunk of the letter.
@@ -33,7 +30,7 @@ TODO
 
 - create "defineSite" function
 
-- find where fonts are stored after build, and fix the <link rel="preload"> tags
+- replace "block" classes with raw styles using variables
 
 - add a Widget model and getWidget io function that loads content from a "widgets" directory,
   with frontmatter and a "Body" property.

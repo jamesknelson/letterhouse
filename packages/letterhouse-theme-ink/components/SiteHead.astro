@@ -1,4 +1,7 @@
 ---
+import karma600 from '../fonts/karma-v11-latin-ext_latin-600.woff2'
+import karlaRegular from '../fonts/karla-v15-latin-ext_latin-regular.woff2'
+
 export interface Props {
   title: string
   description: string | null
@@ -24,18 +27,18 @@ const { description, title } = Astro.props
 <meta name="title" content={title} />
 <meta name="description" content={description} />
 
-<!-- Fonts -->
+<!-- Preload most-used fonts -->
 <link
   rel="preload"
   as="font"
-  href="/fonts/karma-v11-latin-ext_latin-600.woff2"
+  href={karma600}
   type="font/woff2"
   cross-origin="anonymous"
 />
 <link
   rel="preload"
   as="font"
-  href="/fonts/karla-v15-latin-ext_latin-regular.woff2"
+  href={karlaRegular}
   type="font/woff2"
   cross-origin="anonymous"
 />

@@ -29,26 +29,6 @@ export default function letterhouseIntegration({
         }) {
           const theme = await themeOrPromise
 
-          const sitePageModules = import.meta.glob('/src/pages/**/*')
-          const sitePagePatterns = Object.keys(sitePageModules).map(
-            getPatternFromPagePath,
-          )
-
-          if (theme.stylesheets.global) {
-            injectScript('page-ssr', `import "${theme.stylesheets.global}";`)
-          }
-
-          // Inject the theme's default routes, where they're not overridden by
-          // the app itself.
-          for (const [pattern, entryPoint] of Object.entries(theme.pages)) {
-            if (!sitePagePatterns.includes(pattern)) {
-              injectRoute({
-                pattern,
-                entryPoint,
-              })
-            }
-          }
-
           const hasPostCSSConfig =
             Object.keys(import.meta.glob('/src/postcss.config.js')).length > 0
           if (!hasPostCSSConfig) {
@@ -75,13 +55,34 @@ export default function letterhouseIntegration({
             )
           }
 
+          const sitePageModules = import.meta.glob('/src/pages/**/*')
+          const sitePagePatterns = Object.keys(sitePageModules).map(
+            getPatternFromPagePath,
+          )
+
+          // Inject the theme's default routes, where they're not overridden by
+          // the app itself.
+          for (const [pattern, entryPoint] of Object.entries(theme.pages)) {
+            if (!sitePagePatterns.includes(pattern)) {
+              injectRoute({
+                pattern,
+                entryPoint,
+              })
+            }
+          }
+
           updateConfig({
+            style: config.style,
             markdown: {
               remarkPlugins,
               rehypePlugins,
               extendDefaultPlugins: true,
             },
           })
+
+          if (theme.stylesheets.global) {
+            injectScript('page-ssr', `import "${theme.stylesheets.global}";`)
+          }
         },
       },
     },
