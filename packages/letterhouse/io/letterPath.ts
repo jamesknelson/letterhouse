@@ -1,71 +1,67 @@
-import { LetterCategory } from '../model/letter'
+import { LetterCollection, LetterStatus } from '../model/letter'
+
+const pattern = /\/(posts|inbox)\/(draft|preview|published)\/([^\.\/]+)\.md$/
 
 export interface LetterPath {
   id: string
-  file: string
-  category: LetterCategory
-  to: string
-  from: string
-  dated: string | null
-  slug: string | null
+  collection: LetterCollection
+  status: LetterStatus
+  slug: string
+
+  dated?: string
+  to?: string
+  from?: string
 }
 
 export function parseLetterPath(path: string): LetterPath {
-  const result: LetterPath = {
-    // These are both set to "myself" as all formats must override at least
-    // one of these.
-    id: path.replace(/\/letter\.mdx?$/, ''),
-    file: path.split('../content/')[1],
-    category: 'draft',
-    to: 'myself',
-    from: 'myself',
-    dated: null,
-    slug: null,
-  }
-
-  for (const { category, pattern, parts } of formats) {
-    const match = path.match(pattern)
-    if (match) {
-      for (let i = 0; i < parts.length; i++) {
-        const part = parts[i]
-        const value = match[i + 1]
-
-        // TODO: sanity check on value based on part
-
-        result[part] = value
-      }
-      result.category = category
-      return result
+  const match = path.match(pattern)
+  if (match) {
+    const [, collection, status, slug] = match
+    const result: LetterPath = {
+      id: path.replace(/\.md$/, ''),
+      collection: collection as LetterCollection,
+      status: status as LetterStatus,
+      slug,
     }
+
+    for (const { pattern, property } of extractables) {
+      const match = slug.match(pattern)
+      if (match) {
+        const value = match[1]
+        if (property === 'dated') {
+          result.slug = slug.replace(/^\d{4}-\d{2}-\d{2}-/, '')
+          result[property] = value
+        } else if (
+          (property === 'to' || property === 'from') &&
+          value !== 'enclosed'
+        ) {
+          result[property] = value.replace(/-et-al$/, '')
+        }
+      }
+    }
+
+    return result
   }
 
   throw new TypeError('Unknown letter id format: ' + path)
 }
 
-type FormatPart = 'dated' | 'from' | 'to' | 'slug'
-
-interface Format {
+interface Extractable {
   pattern: RegExp
-  parts: FormatPart[]
-  category: LetterCategory
+  property: Extract<keyof LetterPath, 'dated' | 'to' | 'from'>
 }
 
-const formats: Format[] = [
+const extractables: Extractable[] = [
   {
-    pattern:
-      /received\/(\d{4}-\d{2}-\d{2})-from-((?:(?!--).)+)(?:--(.+))?\/letter\.mdx?$/,
-    parts: ['dated', 'from', 'slug'],
-    category: 'received',
+    pattern: /(?:^|-)(\d{4}-\d{2}-\d{2})-/,
+    property: 'dated',
   },
   {
-    pattern:
-      /sent\/(\d{4}-\d{2}-\d{2})-to-((?:(?!--).)+)(?:--(.+))?\/letter\.mdx?$/,
-    parts: ['dated', 'to', 'slug'],
-    category: 'sent',
+    pattern: /(?:^|-)to-((?:(?!--).)+)(?:--(.+))?$/,
+    property: 'to',
   },
   {
-    pattern: /sent\/draft-to-((?:(?!--).)+)(?:--(.+))?\/letter\.mdx?$/,
-    parts: ['to', 'slug'],
-    category: 'draft',
+    pattern: /(?:^|-)from-((?:(?!--).)+)(?:--(.+))?$/,
+    property: 'from',
   },
 ]

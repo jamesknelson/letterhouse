@@ -4,10 +4,9 @@ import { Letter } from './model/letter'
 export function letter(letter: Letter): string {
   return [
     '',
-    letter.category,
-    letter.slug ??
-      letter.dated ??
-      (letter.to[0].id ? `to-${letter.to[0].id}` : 'wip'),
+    ...(letter.collection === 'inbox' ? ['inbox'] : []),
+    letter.status === 'published' ? letter.dated : letter.status,
+    letter.slug,
   ].join('/')
 }
 
@@ -20,13 +19,13 @@ export function address(address: Address): string {
 }
 
 export function received(): string {
-  return '/received'
+  return '/inbox'
 }
 
 export function sent(): string {
-  return '/sent'
+  return '/'
 }
 
 export function draftIndex(): string {
-  return '/draft'
+  return '/unpublished'
 }

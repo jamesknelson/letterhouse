@@ -42,4 +42,7 @@ export interface Work {
 // TODO:
 // - update types so different platforms include different fields,
 //   e.g. twitter has a date and at least one author
+// - for twitter type, add a "threadId" to the work object, so that it's
+//   possible to only automatically add the earliest tweet in a thread
+//   to a letter's re: line.
 export type WorkPlatform = 'twitter'

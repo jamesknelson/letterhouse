@@ -1,23 +1,34 @@
+import type { Address } from '../model/address'
+
+import type { AvatarModule } from './avatarModule'
+import type { ProfileModule } from './profileModule'
+
 import mem from 'mem'
 
-import { getDefaultAddressAvatarURL, type Address } from '../model/address'
 import { NotFoundError } from '../utils/notFoundError'
 
-import {
-  type AvatarModule,
-  isMaybeAvatarModule,
-  validateAvatarModule,
-} from './avatarModule'
+import { isMaybeAvatarModule, validateAvatarModule } from './avatarModule'
 import {
   getAddressBookAvatarModules,
   getAddressBookProfileModules,
 } from './moduleGetters'
-import {
-  type ProfileModule,
-  isProfileModule,
-  validateProfileModule,
-} from './profileModule'
-import { type AddressDefinition, defineAddress } from './addressDefinition'
+import { isProfileModule, validateProfileModule } from './profileModule'
+
+import { humanize } from '../utils/humanize'
+
+export type AddressDefinition = string | AddressDefinitionObject
+
+export type AddressDefinitionObject =
+  | {
+      kind?: never
+      name: string
+      twitter?: string
+    }
+  | {
+      kind?: never
+      name?: string
+      twitter: string
+    }
 
 export async function getOrDefineAddress(
   definition: Address | AddressDefinition,
@@ -25,6 +36,11 @@ export async function getOrDefineAddress(
   if (typeof definition !== 'string' && definition.kind === 'address') {
     return definition
   }
+
+  // TODO: how do we fall back to defaults for an address?
+  // - regardless of whether an address is defined from a definition object,
+  //   or defined in a file, if an address has a twitter field, we want the
+  //   *default* name and photo to come from it
 
   try {
     return getAddress(definition as string)
@@ -126,5 +142,56 @@ function createAddressFromModules(
       maybeAvatarModule?.default ??
       getDefaultAddressAvatarURL(profileModule.frontmatter.name),
     Notes: profileModule.Content ?? undefined,
+  }
+}
+
+function unmemoizedDefineAddress(definition: AddressDefinition): Address {
+  if (typeof definition === 'string') {
+    const name = humanize(definition)
+
+    return {
+      kind: 'address',
+      name,
+      id: definition,
+      avatarURL: getDefaultAddressAvatarURL(name),
+      Notes: undefined,
+    }
+  } else {
+    // TODO: validate
+
+    return {
+      ...getDefaultAddressDetails(definition),
+      kind: 'address',
+      id: null,
+      Notes: undefined,
+    }
+  }
+}
+
+const defineAddress = mem(unmemoizedDefineAddress)
+
+function getDefaultAddressAvatarURL(name: string) {
+  return `https://ui-avatars.com/api/?size=256&background=d8dbde&color=606672&name=${name.replace(
+    /\s+/g,
+    '+',
+  )}`
+}
+
+// TODO: memoize
+async function getDefaultAddressDetails(def: AddressDefinitionObject): Promise<{
+  name: string
+  avatarURL: string
+}> {
+  if (!def.twitter) {
+    const name = def.name!
+    return {
+      name,
+      avatarURL: getDefaultAddressAvatarURL(name),
+    }
+  } else {
+    return {
+      name: 'TODO',
+      avatarURL: getDefaultAddressAvatarURL('Alpha'),
+    }
   }
 }

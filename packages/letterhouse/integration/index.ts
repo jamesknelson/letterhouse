@@ -8,14 +8,14 @@ import postCSSPresetEnv from 'postcss-preset-env'
 
 import { getPatternFromPagePath } from '../utils/getPatternFromPagePath'
 
-import { rehypePlugins, remarkPlugins } from './markdown'
+import { getRehypePlugins } from './markdown'
 
 export interface LetterhouseIntegrationOptions {
-  theme: Theme | Promise<Theme>
+  theme: Theme
 }
 
 export default function letterhouseIntegration({
-  theme: themeOrPromise,
+  theme,
 }: LetterhouseIntegrationOptions): AstroIntegration[] {
   return [
     {
@@ -27,12 +27,16 @@ export default function letterhouseIntegration({
           injectScript,
           updateConfig,
         }) {
-          const theme = await themeOrPromise
-
           const hasPostCSSConfig =
             Object.keys(import.meta.glob('/src/postcss.config.js')).length > 0
+          const postCSSConfig = config.vite.css?.postcss
+          // TODO: Using `unknown` here as the types seem to be wrong
+          const postCSSPlugins: unknown[] =
+            typeof postCSSConfig === 'string' || !postCSSConfig?.plugins
+              ? []
+              : postCSSConfig.plugins
           if (!hasPostCSSConfig) {
-            config.style.postcss.plugins.push(
+            postCSSPlugins.push(
               postCSSImport,
               postCSSPresetEnv({
                 stage: 2,
@@ -72,10 +76,15 @@ export default function letterhouseIntegration({
           }
 
           updateConfig({
-            style: config.style,
+            vite: {
+              css: {
+                postcss: {
+                  plugins: postCSSPlugins,
+                },
+              },
+            },
             markdown: {
-              remarkPlugins,
-              rehypePlugins,
+              rehypePlugins: getRehypePlugins(theme.layouts),
               extendDefaultPlugins: true,
             },
           })
@@ -87,9 +96,8 @@ export default function letterhouseIntegration({
       },
     },
     mdxIntegration({
-      remarkPlugins,
-      rehypePlugins,
-      extendPlugins: 'astroDefaults',
+      rehypePlugins: getRehypePlugins(theme.layouts),
+      extendMarkdownConfig: true,
     }),
   ]
 }

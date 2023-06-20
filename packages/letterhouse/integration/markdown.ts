@@ -3,8 +3,11 @@ import { visit, SKIP } from 'unist-util-visit'
 
 import type { RehypePlugin } from '../types/astro'
 
-export const rehypePlugins = [rehypeQuotes, rehypeFrontmatterWordCount]
-export const remarkPlugins = []
+export const getRehypePlugins = (layouts: Record<string, string>) => [
+  rehypeQuotes,
+  rehypeFrontmatterWordCount,
+  rehypeFrontmatterLayoutSetter(layouts),
+]
 
 // Extract quote-related metadata and add it to both the frontmatter, and to
 // the blockquote's attributes where appropriate.
@@ -136,6 +139,16 @@ function rehypeFrontmatterWordCount(): RehypePlugin {
   return (tree, { data }) => {
     data.astro.frontmatter.wordCount = toString(tree).split(/\s+/g).length - 1
   }
+}
+
+function rehypeFrontmatterLayoutSetter(layouts: Record<string, string>) {
+  return (): RehypePlugin =>
+    (tree, { data }) => {
+      const layout = data.astro.frontmatter.layout
+      if (layouts[layout]) {
+        data.astro.frontmatter.layout = layouts[layout]
+      }
+    }
 }
 
 function getWorkId(meta: any): string {

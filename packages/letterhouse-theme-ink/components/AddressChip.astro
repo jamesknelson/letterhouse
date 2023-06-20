@@ -1,7 +1,7 @@
 ---
 import type { Address } from 'letterhouse'
 
-import { url } from 'letterhouse'
+import { getSite, url } from 'letterhouse'
 
 import Avatar from './Avatar.astro'
 
@@ -10,17 +10,41 @@ export interface Props {
   value: Address
 }
 
+const site = await getSite()
+
 const { relabelMyself, value } = Astro.props as Props
-const href = value.id ? url.address(value) : '#'
+
+// TODO: set up the address book
+// const href = value.id ? url.address(value) : '#'
 ---
 
-<a href={href} class="root">
-  <span class="avatar-wrapper">
-    <Avatar class="avatar" name={value.name} url={value.avatarURL} size={24} />
-  </span>
+{value.id === site.author.id ? (
+  <a href="/about" class="root">
+    <span class="avatar-wrapper">
+      <Avatar
+        class="avatar"
+        name={value.name}
+        url={value.avatarURL}
+        size={24}
+      />
+    </span>
 
-  {relabelMyself && value.id === 'myself' ? 'Myself' : value.name}
-</a>
+    {relabelMyself && value.id === 'myself' ? 'Myself' : value.name}
+  </a>
+) : (
+  <span class="root">
+    <span class="avatar-wrapper">
+      <Avatar
+        class="avatar"
+        name={value.name}
+        url={value.avatarURL}
+        size={24}
+      />
+    </span>
+
+    {relabelMyself && value.id === 'myself' ? 'Myself' : value.name}
+  </span>
+)}
 
 <style>
   .root {
@@ -31,8 +55,9 @@ const href = value.id ? url.address(value) : '#'
     color: var(--color-on-alt-surface);
     font-weight: bold;
     padding: 0 0.75rem 0 0;
+    user-select: none;
   }
-  .root:hover {
+  a.root:hover {
     color: var(--color-secondary);
   }
 

@@ -1,7 +1,7 @@
 ---
 import { type Address } from '@/model/address'
 
-import Avatar from './Avatar.astro'
+import Avatar from '../components/Avatar.astro'
 import SiteLayout from './SiteLayout.astro'
 
 export interface Props {
@@ -11,14 +11,10 @@ export interface Props {
 const { address } = Astro.props as Props
 ---
 
-<SiteLayout language="en">
-  <Avatar
-    class="avatar"
-    size={128}
-    name={address.name}
-    url={address.avatarURL}
+<SiteLayout language='en'>
+  <Avatar class='avatar' size={128} name={address.name} url={address.avatarURL}
   />
   <h1>{address.name}</h1>
   {address.Notes && <address.Notes />}
-  <div slot="margin"></div>
+  <div slot='margin'></div>
 </SiteLayout>

@@ -6,7 +6,7 @@ import type { Address } from 'letterhouse'
 
 import { getAddressBook } from 'letterhouse'
 
-import AddressLayout from '../../components/AddressLayout.astro'
+import AddressLayout from '../../layouts/AddressLayout.astro'
 
 export async function getStaticPaths() {
   const addresses = await getAddressBook()

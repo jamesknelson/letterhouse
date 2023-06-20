@@ -2,17 +2,17 @@
 import '../../styles/_root.css'
 import '../../styles/_global.css'
 
-import { getDrafts, getSite } from 'letterhouse'
+import { getReceived, getSite } from 'letterhouse'
 
 import BlurbList from '../../components/BlurbList.astro'
 import MarginIntro from '../../components/MarginIntro.astro'
-import SiteLayout from '../../components/SiteLayout.astro'
+import SiteLayout from '../../layouts/SiteLayout.astro'
 
 const site = await getSite()
-const draftLetters = await getDrafts()
+const receivedLetters = await getReceived()
 ---
 
 <SiteLayout site={site}>
-  <BlurbList letters={draftLetters} />
-  <MarginIntro site={site} slot="margin" />
+  <BlurbList letters={receivedLetters} />
+  <MarginIntro site={site} slot='margin' />
 </SiteLayout>

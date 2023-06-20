@@ -3,7 +3,6 @@ import * as url from './url'
 export { url }
 
 export * from './io/addressGetters'
-export * from './io/gitGetters'
 export * from './io/letterGetters'
 export * from './io/siteGetters'
 export * from './io/themeDefinition'

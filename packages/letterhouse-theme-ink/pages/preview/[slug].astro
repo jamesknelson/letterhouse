@@ -4,13 +4,13 @@ import '../../styles/_global.css'
 
 import type { Letter, Site } from 'letterhouse'
 
-import { getDrafts, getSite } from 'letterhouse'
+import { getPreviews, getSite } from 'letterhouse'
 
 import LetterLayout from '../../layouts/LetterLayout.astro'
 
 export async function getStaticPaths() {
   const site = await getSite()
-  const letters = await getDrafts()
+  const letters = await getPreviews()
   return letters.map((letter) => ({
     params: {
       slug: letter.slug,

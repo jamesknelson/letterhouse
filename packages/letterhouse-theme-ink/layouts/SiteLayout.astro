@@ -3,7 +3,7 @@ import type { Site } from 'letterhouse'
 
 import { getSite } from 'letterhouse'
 
-import SiteHead from './SiteHead.astro'
+import SiteHead from '../components/SiteHead.astro'
 
 export interface Props {
   hideBrand?: boolean
@@ -22,15 +22,15 @@ const { author, blurb = null, language, menu, title } = site
 <!DOCTYPE html>
 <html lang={language}>
   <head>
-    <slot name="head">
+    <slot name='head'>
       <SiteHead title={title} description={blurb} />
     </slot>
   </head>
 
   <body>
-    <div id="site">
+    <div id='site'>
       <header>
-        <div class="inner">
+        <div class='inner'>
           {hideBrand ? (
             <div />
           ) : (
@@ -41,7 +41,7 @@ const { author, blurb = null, language, menu, title } = site
             </div>
           )}
 
-          <nav class="site-menu">
+          <nav class='site-menu'>
             <ul>
               {menu.map((item) => (
                 <li>
@@ -52,17 +52,17 @@ const { author, blurb = null, language, menu, title } = site
           </nav>
         </div>
       </header>
-      <slot name="hero" />
+      <slot name='hero'></slot>
       <main>
-        <div class="body">
-          <slot />
+        <div class='body'>
+          <slot></slot>
         </div>
-        <aside class="margin">
-          <slot name="margin" />
+        <aside class='margin'>
+          <slot name='margin'></slot>
         </aside>
       </main>
       <footer>
-        <section class="copyright">
+        <section class='copyright'>
           &copy; {new Date().getFullYear()}
           {author.name}
         </section>

@@ -1,4 +1,4 @@
-import { createGithubEditURLGetter, getAddress } from 'letterhouse'
+import { getAddress } from 'letterhouse'
 
 export { default as intro } from './widgets/intro.mdx'
 
@@ -10,23 +10,19 @@ export const language = 'en'
 
 export const menu = [
   {
-    label: 'Letters',
+    label: 'Notes & Essays',
     href: '/',
   },
-  {
-    label: 'Inbox',
-    href: '/received',
-  },
-  {
-    label: 'Address Book',
-    href: '/address-book',
-  },
+  // {
+  //   label: 'Inbox',
+  //   href: '/inbox',
+  // },
+  // {
+  //   label: 'Address Book',
+  //   href: '/address-book',
+  // },
   {
     label: 'About',
     href: '/about',
   },
 ]
-
-export const editURLGetter = createGithubEditURLGetter(
-  (branch) => `jamesknelson/jkn${branch === 'main' ? '' : '-draft'}`,
-)

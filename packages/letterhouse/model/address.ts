@@ -11,10 +11,3 @@ export interface Address {
   siteURL?: string // Could be a twitter if that's all they've got
   Notes?: AstroContent
 }
-
-export function getDefaultAddressAvatarURL(name: string) {
-  return `https://ui-avatars.com/api/?size=256&background=d8dbde&color=606672&name=${name.replace(
-    /\s+/g,
-    '+',
-  )}`
-}

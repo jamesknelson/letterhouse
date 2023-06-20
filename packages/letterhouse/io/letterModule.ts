@@ -1,12 +1,11 @@
 import type { Letter, LetterRegarding } from '../model/letter'
 import type { AstroContent } from '../types/astro'
 
-import type { AddressDefinition } from './addressDefinition'
+import type { AddressDefinition } from './addressGetters'
 import type { LetterPath } from './letterPath'
 import type { WorkDefinition } from './workDatabase'
 
 import { MarkdownHeading } from 'astro'
-import { uniq } from 'ramda'
 
 import { MarkdownQuote } from '../types/markdown'
 import { ensureTruthyArray } from '../utils/ensureTruthyArray'
@@ -14,6 +13,7 @@ import { isURL } from '../utils/isURL'
 
 import { getOrDefineAddress } from './addressGetters'
 import { getOrDefineWork } from './workDatabase'
+import { getSite } from './siteGetters'
 
 export interface LetterModule {
   Content: AstroContent
@@ -50,6 +50,7 @@ async function getLetterRegardingFromDefinition(
 }
 
 export interface LetterModuleFrontmatter {
+  dated?: string
   from?: AddressDefinition | AddressDefinition[]
   to?: AddressDefinition | AddressDefinition[]
   cc?: AddressDefinition | AddressDefinition[]
@@ -82,9 +83,20 @@ export async function getLetterFromModuleAndPath(
   module: LetterModule,
   path: LetterPath,
 ): Promise<Letter> {
-  const { id, category, slug, dated, from: pathAuthors, to: pathTo } = path
+  const {
+    id,
+    collection,
+    status,
+    slug,
+    dated: pathDated,
+    to: pathTo,
+    from: pathAuthor,
+  } = path
+
+  const sitePromise = getSite()
 
   const {
+    dated: contentDated,
     from: contentAuthors,
     to: contentTo,
     cc: contentCC,
@@ -105,53 +117,63 @@ export async function getLetterFromModuleAndPath(
     }),
   )
 
-  const reDefs = contentRe
-    ? ensureTruthyArray(contentRe)
-    : quotes.map((quote) => quote.work)
-  const re = await Promise.all(reDefs.map(getLetterRegardingFromDefinition))
-  const reAuthorAddresses = uniq(
-    re.flatMap((reference) =>
-      reference.type === 'work'
-        ? reference.value.authors.map((attribution) => attribution.address)
-        : [],
-    ),
+  const re = await Promise.all(
+    ensureTruthyArray(contentRe).map(getLetterRegardingFromDefinition),
   )
+  const siteAuthorId = (await sitePromise).author.id
+
+  const toDefs = contentTo
+    ? ensureTruthyArray(contentTo)
+    : pathTo
+    ? [pathTo]
+    : collection === 'inbox'
+    ? [siteAuthorId]
+    : []
+  const to = await Promise.all(toDefs.map(getOrDefineAddress))
 
   const authorDefs = contentAuthors
     ? ensureTruthyArray(contentAuthors)
-    : [pathAuthors]
-  const toDefs = contentTo
-    ? ensureTruthyArray(contentTo)
-    : reAuthorAddresses.length
-    ? reAuthorAddresses
-    : [pathTo]
-
-  const authorsPromise = await Promise.all(
+    : collection === 'inbox'
+    ? pathAuthor
+      ? [pathAuthor]
+      : []
+    : [siteAuthorId]
+  const authors = await Promise.all(
     authorDefs.map(async (def) => ({
       kind: 'attribution' as const,
       address: await getOrDefineAddress(def),
     })),
   )
-  const toPromise = Promise.all(toDefs.map((def) => getOrDefineAddress(def)))
-
-  const authors = await authorsPromise
-  const to = await toPromise
 
   const ccDefs = contentCC
     ? ensureTruthyArray(contentCC)
-    : category === 'received' ||
-      to.find((address) => address.id === 'the-reader')
+    : collection === 'inbox' ||
+      to.find((address) => address.id === 'the-reader') ||
+      !to.length
     ? []
     : ['the-reader']
 
   const cc = await Promise.all(ccDefs.map((def) => getOrDefineAddress(def)))
 
-  if ((authors[0].address.id ?? 'enclosed') !== pathAuthors) {
+  const dated = contentDated || pathDated || null
+
+  if (contentDated && pathDated && contentDated !== pathDated) {
     throw new TypeError(
-      `Letter "${id}" is missing "${pathAuthors}" from its frontmatter's "from" field.`,
+      `Letter "${id}" is has a path date that doesn't match its content date (${contentDated})`,
     )
   }
-  if ((to[0].id ?? 'enclosed') !== pathTo) {
+  if (status === 'published' && !dated) {
+    throw new TypeError(
+      `For letter "${id}" to be published, it must specify a date.`,
+    )
+  }
+
+  if (pathAuthor && contentAuthors && pathAuthor !== authors[0].address.id) {
+    throw new TypeError(
+      `Letter "${id}" is missing "${pathAuthor}" from its frontmatter's "from" field.`,
+    )
+  }
+  if (pathTo && contentTo && pathTo !== to[0].id) {
     throw new TypeError(
       `Letter "${id}" is missing "${pathTo}" from its frontmatter's "to" field.`,
     )
@@ -160,8 +182,8 @@ export async function getLetterFromModuleAndPath(
   return {
     kind: 'letter',
     id,
-    file: path.file,
-    category,
+    collection,
+    status,
     slug,
     dated,
     authors,

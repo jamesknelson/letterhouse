@@ -7,7 +7,7 @@
   },
   "devDependencies": {
     "@types/node": "^18.7.6",
-    "astro": ">=1.6.5",
+    "astro": ">=2.6.4",
     "letterhouse": "workspace:^0.1.0",
     "letterhouse-theme-ink": "workspace:^0.1.0"
   }

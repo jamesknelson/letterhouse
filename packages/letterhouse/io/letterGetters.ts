@@ -3,7 +3,7 @@ import mem from 'mem'
 import { type Letter } from '../model/letter'
 import { NotFoundError } from '../utils/notFoundError'
 
-import { getReceivedLetterModules, getSentLetterModules } from './moduleGetters'
+import { getInboxModules, getPostModules } from './moduleGetters'
 import {
   getLetterFromModuleAndPath,
   isLetterContent,
@@ -25,21 +25,28 @@ export function getLetter(id: string): Promise<Letter> {
 export function getReceived(): Promise<Letter[]> {
   return collate(
     [...getLetterLoaderMap().values()],
-    (letter) => letter.category === 'received',
+    (letter) => letter.collection === 'inbox',
   )
 }
 
 export async function getDrafts(): Promise<Letter[]> {
   return collate(
     [...getLetterLoaderMap().values()],
-    (letter) => letter.category === 'draft',
+    (letter) => letter.collection !== 'inbox' && letter.status === 'draft',
   )
 }
 
-export async function getSent(): Promise<Letter[]> {
+export async function getPreviews(): Promise<Letter[]> {
   return collate(
     [...getLetterLoaderMap().values()],
-    (letter) => letter.category === 'sent',
+    (letter) => letter.collection !== 'inbox' && letter.status === 'preview',
+  )
+}
+
+export async function getPublished(): Promise<Letter[]> {
+  return collate(
+    [...getLetterLoaderMap().values()],
+    (letter) => letter.collection !== 'inbox' && letter.status === 'published',
   )
 }
 
@@ -52,8 +59,8 @@ const getLetterLoaderMap: {
   if (!getLetterLoaderMap.cache) {
     getLetterLoaderMap.cache = new Map(
       [
-        ...Object.entries(getReceivedLetterModules()),
-        ...Object.entries(getSentLetterModules()),
+        ...Object.entries(getInboxModules()),
+        ...Object.entries(getPostModules()),
       ].map(getLetterLoaderEntry),
     )
   }

@@ -23,8 +23,8 @@ const formattedDate = date && format(date, 'yyyy/LL/dd')
 ---
 
 <header>
-  <div class="address-and-date">
-    {!toMyself && letter.category !== 'received' && (
+  <div class='address-and-date'>
+    {!toMyself && letter.collection !== 'inbox' && (
       <div class="pair">
         <h3>From</h3>
         <ul>
@@ -36,17 +36,19 @@ const formattedDate = date && format(date, 'yyyy/LL/dd')
         </ul>
       </div>
     )}
-    <div class="pair">
-      <h3>{toMyself && 'From and '}To</h3>
-      <ul>
-        {letter.to.map((address) => (
-          <li>
-            <AddressChip value={address} />
-          </li>
-        ))}
-      </ul>
-    </div>
-    {!!letter.cc.length && (
+    {Boolean(letter.to.length) && (
+      <div class="pair">
+        <h3>{toMyself && 'From and '}To</h3>
+        <ul>
+          {letter.to.map((address) => (
+            <li>
+              <AddressChip value={address} />
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+    {Boolean(letter.cc.length) && (
       <div class="pair">
         <h3>CC</h3>
         <ul>
@@ -58,16 +60,18 @@ const formattedDate = date && format(date, 'yyyy/LL/dd')
         </ul>
       </div>
     )}
-    <div class="space"></div>
-    <div class="date pair">
+    <div class='space'></div>
+    <div class='date pair'>
       <h3>Dated</h3>
-      {formattedDate ? (
-        <time datetime={formattedDate} class="date">
-          {formattedDate}
-        </time>
+      {letter.status === 'published' ? (
+        formattedDate ? (
+          <time datetime={formattedDate} class="date">
+            {formattedDate}
+          </time>
+        ) : null
       ) : (
-        <a class="draft" href={url.draftIndex()}>
-          draft
+        <a class={letter.status} href={url.draftIndex()}>
+          {letter.status}
         </a>
       )}
     </div>
@@ -175,6 +179,15 @@ const formattedDate = date && format(date, 'yyyy/LL/dd')
   }
   .draft {
     color: rgba(var(--rgb-on-surface), var(--opacity-placeholder));
+
+    &:hover {
+      color: var(--color-secondary);
+    }
+  }
+  .preview {
+    color: rgba(var(--rgb-on-surface), var(--opacity-alt));
+    font-style: bold;
+    font-style: italic;
 
     &:hover {
       color: var(--color-secondary);

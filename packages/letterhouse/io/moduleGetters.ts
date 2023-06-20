@@ -2,11 +2,11 @@ export function getAddressBookAvatarModules() {
   return import.meta.glob('/src/addressBook/*/avatar.{jpg,png}')
 }
 export function getAddressBookProfileModules() {
-  return import.meta.glob('/src/addressBook/*/profile.mdx')
+  return import.meta.glob('/src/addressBook/*/profile.md')
 }
-export function getReceivedLetterModules() {
-  return import.meta.glob('/src/received/*/letter.mdx')
+export function getInboxModules() {
+  return import.meta.glob('/src/inbox/*/*.md')
 }
-export function getSentLetterModules() {
-  return import.meta.glob('/src/sent/*/letter.mdx')
+export function getPostModules() {
+  return import.meta.glob('/src/posts/*/*.md')
 }

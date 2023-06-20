@@ -4,16 +4,17 @@ import '../../styles/_global.css'
 
 import type { Letter, Site } from 'letterhouse'
 
-import { getSent, getSite } from 'letterhouse'
+import { getReceived, getSite } from 'letterhouse'
 
-import LetterLayout from '../../components/LetterLayout.astro'
+import LetterLayout from '../../layouts/LetterLayout.astro'
 
 export async function getStaticPaths() {
   const site = await getSite()
-  const letters = await getSent()
+  const letters = await getReceived()
   return letters.map((letter) => ({
     params: {
-      slug: letter.slug ?? letter.dated,
+      slug:
+        letter.slug ?? letter.dated ?? letter.id.split('/').slice(1).join('-'),
     },
     props: { letter, site },
   }))

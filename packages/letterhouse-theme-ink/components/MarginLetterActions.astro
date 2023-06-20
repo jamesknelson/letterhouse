@@ -10,18 +10,14 @@ export interface Props {
 }
 
 const { letter, site } = Astro.props as Props
-
-const editURL = await site.editURLGetter?.(letter.file)
 ---
 
-<MarginSection class="letterActions">
+<MarginSection class='letterActions'>
   <nav>
-    {letter.category === 'draft' ? (
+    {!letter.dated ? (
       <>
         <h3>This draft</h3>
-        {editURL && (
-          <LetterAction href={editURL} label="Suggest a change" icon="pencil" />
-        )}
+        <LetterAction href="#" label="Suggest a change" icon="pencil" />
         <LetterAction
           href={`mailto:${letter.authors
             .map(({ address }) => address.email)

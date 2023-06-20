@@ -7,14 +7,13 @@ import type { Work } from './work'
 export interface Letter {
   kind: 'letter'
 
-  category: LetterCategory
-
-  // The path within `data` where the letter file was located,
-  // excluding the letter file itself.
+  // The path where the letter was located on the filesystem.
   id: string
-  file: string
 
-  // An undated letter is considered a draft.
+  collection: LetterCollection
+  status: LetterStatus
+
+  // All published letters must be dated.
   dated: null | string
 
   // If not specified, will be extracted from the letter id by default.
@@ -27,8 +26,8 @@ export interface Letter {
   // letter is addressing.
   re: LetterRegarding[]
 
-  // An optional key which can be used for human-readable URLs.
-  slug: string | null
+  // Used for human-readable URLs.
+  slug: string
 
   // If not specified, will by default be extracted from the first heading.
   // If no headings are present, it will be null – and where necessary for
@@ -47,7 +46,9 @@ export interface Letter {
   Body: AstroContent
 }
 
-export type LetterCategory = 'sent' | 'received' | 'draft'
+export type LetterCollection = 'inbox' | 'posts'
+
+export type LetterStatus = 'draft' | 'preview' | 'published'
 
 export interface LetterQuote {
   text: string
@@ -58,3 +59,5 @@ export type LetterRegarding =
   | { type: 'topic'; value: string }
   | { type: 'text'; value: string }
   | { type: 'work'; value: Work }
+
+function isInbox() {}

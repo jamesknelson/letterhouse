@@ -1,14 +1,17 @@
 TODO
 
-- in letter io, find all quote references and define them
-- implement getReference so that it fetches from/to/date/title from urls and caches the results,
+
+- rss: https://docs.astro.build/en/guides/rss/
+
+
+- update getOrDefineAddress to fall back to crawling a twitter user's name and photo from their handle
+- continue implementing getOrDefineReference so that it fetches from/to/date/title from urls and caches the results,
   alongside the cached contents, headers, and time of fetch
-- If only a "href: " field is specified, we can try and automatically
-  pull in from/to/date/title - either via http, or by looking for a matching href in the letter's
-  re: block.
-- If from: to: date: title: are specified, they'll be used as the defaults for any
-  matching re: href.
-- rename "references" to "works"
+  * don't override any manually specified from/to/date/title
+  * if two manually specified from/to/date/title's don't match, then warn
+  * if a manually specified from/to/date/title doesn't match the cached one pulled from the source,
+    then warn
+
 
 - for briefs of letters w/ no blurb, automatically generate some snippet that can be used instead
 - export a HTML version of the blurb, alongside the current text version
@@ -26,8 +29,6 @@ TODO
 
 - list published replies to a letter, w/ blurbs, underneath the letter
 - show a label right of "Reply" with the number of published replies
-
-- rss: https://docs.astro.build/en/guides/rss/
 
 - create "defineSite" function
 

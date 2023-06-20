@@ -1,3 +1,3 @@
 import { defineTheme } from 'letterhouse'
 
-export default defineTheme(import.meta.url, {})
+export default await defineTheme(import.meta.url, {})

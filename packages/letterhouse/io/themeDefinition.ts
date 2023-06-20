@@ -8,26 +8,29 @@ import { Theme } from '../model/theme'
 
 // TODO:
 // - find all pages in the theme's /pages directory and export them
-// - error if required pages (e.g. /sent/[slug], /address-book/[slug]) aren't there
+// - error if required pages (e.g. /[dated]/[slug], /address-book/[slug]) aren't there
 // - validate input against a schema
 
 export const defaultPages = {
   '/': './pages/index.astro',
+  '/[dated]/[slug]': './pages/[dated]/[slug].astro',
 
   '/address-book': './pages/address-book/index.astro',
   '/address-book/[slug]': './pages/address-book/[slug].astro',
 
-  '/draft': './pages/draft/index.astro',
+  '/unpublished': './pages/unpublished.astro',
   '/draft/[slug]': './pages/draft/[slug].astro',
+  '/preview/[slug]': './pages/preview/[slug].astro',
 
-  '/received': './pages/received/index.astro',
-  '/received/[slug]': './pages/received/[slug].astro',
-
-  '/sent/[slug]': './pages/sent/[slug].astro',
+  '/inbox': './pages/inbox/index.astro',
+  '/inbox/[slug]': './pages/inbox/[slug].astro',
 }
 export const defaultStylesheets = {
   global: './styles/_global.css',
   root: './styles/_root.css',
+}
+export const defaultLayouts = {
+  default: './layouts/SiteLayout.astro',
 }
 
 export type ThemeDefinition = Partial<Theme>
@@ -51,14 +54,20 @@ export async function defineTheme(
     ...defaultPages,
     ...definition.pages,
   })
+  const layouts = mapObjIndexed((value) => resolve(src, value), {
+    ...defaultLayouts,
+    ...definition.layouts,
+  })
 
   await Promise.all([
     validateExistence(Object.values(stylesheets)),
     validateExistence(Object.values(pages)),
+    validateExistence(Object.values(layouts)),
   ])
 
   return {
     kind: 'theme',
+    layouts,
     pages,
     stylesheets,
   }

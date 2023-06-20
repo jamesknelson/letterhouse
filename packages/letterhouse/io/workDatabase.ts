@@ -1,6 +1,6 @@
 import type { Work, WorkPlatform } from '../model/work'
 
-import type { AddressDefinition } from './addressDefinition'
+import type { AddressDefinition } from './addressGetters'
 
 import { ensureTruthyArray } from '../utils/ensureTruthyArray'
 import { isURL } from '../utils/isURL'
@@ -29,7 +29,15 @@ export type WorkDefinitionString = string
 
 function getDefaultFieldsIfTweet(href: string) {}
 
-export async function defineWork(def: WorkDefinition): Promise<void> {
+async function getDataFromURL(url: string) {
+  return {
+    platform: 'twitter',
+    dated: '2017/08/13',
+    authors: {},
+  }
+}
+
+async function defineWork(def: WorkDefinition): Promise<string> {
   const id = def.id ?? def.href ?? def.title
   if (!id) {
     throw new Error(
@@ -42,18 +50,40 @@ export async function defineWork(def: WorkDefinition): Promise<void> {
   }
 
   if (def.href) {
+    Object.assign(def, {
+      kind: 'work',
+      id: 'https://twitter.com/BarackObama/status/896523232098078720',
+      url: 'https://twitter.com/BarackObama/status/896523232098078720',
+      title: '"No one is born hating..."',
+      platform: 'twitter',
+      dated: '2017/08/13',
+      authors: [
+        {
+          kind: 'attribution',
+          address: {
+            kind: 'address',
+            name: 'Barack Obama',
+            id: null,
+            avatarURL:
+              'https://pbs.twimg.com/profile_images/1329647526807543809/2SGvnHYV_x96.jpg',
+            twitter: 'BarackObama',
+          },
+        },
+      ],
+    })
   }
 
   const { authors: authorsDef, to: toDef, ...assignable } = def
 
   const authorsDefArray = ensureTruthyArray(authorsDef)
   const authorsPromise = Promise.all(
-    (authorsDefArray.length ? authorsDefArray : ['anonymous']).map(
-      async (authorDef) => ({
-        kind: 'attribution' as const,
-        address: await getOrDefineAddress(authorDef),
-      }),
-    ),
+    (authorsDefArray.length
+      ? authorsDefArray.map((attribution) => attribution.address)
+      : ['anonymous']
+    ).map(async (authorDef) => ({
+      kind: 'attribution' as const,
+      address: await getOrDefineAddress(authorDef),
+    })),
   )
   const toPromise = toDef
     ? Promise.all(ensureTruthyArray(toDef).map(getOrDefineAddress))
@@ -72,54 +102,22 @@ export async function defineWork(def: WorkDefinition): Promise<void> {
   } else {
     Object.assign(cache[id], work)
   }
+
+  return id
 }
 
 export async function getOrDefineWork(
   definition: WorkDefinition,
 ): Promise<Work> {
-  return {
-    kind: 'work',
-    id: 'https://twitter.com/BarackObama/status/896523232098078720',
-    url: 'https://twitter.com/BarackObama/status/896523232098078720',
-    title: '"No one is born hating..."',
-    platform: 'twitter',
-    dated: '2017/08/13',
-    authors: [
-      {
-        kind: 'attribution',
-        address: {
-          kind: 'address',
-          name: 'Barack Obama',
-          id: null,
-          avatarURL:
-            'https://pbs.twimg.com/profile_images/1329647526807543809/2SGvnHYV_x96.jpg',
-          twitter: 'BarackObama',
-        },
-      },
-    ],
-  }
+  const id = await defineWork(definition)
+  return getWork(id)
 }
 
-export async function getWork(id: string): Promise<Work> {
-  return {
-    kind: 'work',
-    id: 'https://twitter.com/BarackObama/status/896523232098078720',
-    url: 'https://twitter.com/BarackObama/status/896523232098078720',
-    title: '"No one is born hating..."',
-    platform: 'twitter',
-    dated: '2017/08/13',
-    authors: [
-      {
-        kind: 'attribution',
-        address: {
-          kind: 'address',
-          name: 'Barack Obama',
-          id: null,
-          avatarURL:
-            'https://pbs.twimg.com/profile_images/1329647526807543809/2SGvnHYV_x96.jpg',
-          twitter: 'BarackObama',
-        },
-      },
-    ],
+export function getWork(id: string): Work {
+  const cached = cache[id]
+  if (cached) {
+    return cached
   }
+
+  throw new Error('Unknown work: ' + id)
 }
