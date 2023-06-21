@@ -3,6 +3,9 @@ import type { AstroIntegration } from 'astro'
 import type { Theme } from '../model/theme'
 
 import mdxIntegration from '@astrojs/mdx'
+import rss from '@astrojs/rss'
+import { resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import postCSSImport from 'postcss-import'
 import postCSSPresetEnv from 'postcss-preset-env'
 
@@ -74,6 +77,15 @@ export default function letterhouseIntegration({
               })
             }
           }
+
+          // Inject the RSS route
+          injectRoute({
+            pattern: '/rss.xml',
+            entryPoint: resolve(
+              fileURLToPath(import.meta.url),
+              '../../pages/rss.xml.ts',
+            ),
+          })
 
           updateConfig({
             vite: {

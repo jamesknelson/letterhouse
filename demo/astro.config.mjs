@@ -9,4 +9,5 @@ export default defineConfig({
       theme,
     }),
   ],
+  site: 'https://letter.house',
 })

@@ -8,7 +8,7 @@ export interface Site {
   unpublished: boolean
 
   author: Address
-  blurb?: string
+  blurb: string
   language: string
   title: string
 

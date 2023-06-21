@@ -4,6 +4,7 @@ import type { Address } from './address'
 import type { Attribution } from './attribution'
 import type { Work } from './work'
 
+// TODO: type published posts as always having a date
 export interface Letter {
   kind: 'letter'
 
