@@ -1,8 +1,9 @@
 ---
 name: James K Nelson
-email: letters@jamesknelson.com
 blurb: Curious about community, sustainability, and technology.
 siteURL: https://jamesknelson.com
+email: letters@jamesknelson.com
+lightning: jamesknelson@getalby.com
 ---
 ## Hi there! I'm James.
 

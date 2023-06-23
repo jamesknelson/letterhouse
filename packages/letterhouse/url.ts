@@ -27,5 +27,5 @@ export function sent(): string {
 }
 
 export function draftIndex(): string {
-  return '/unpublished'
+  return '/wip'
 }

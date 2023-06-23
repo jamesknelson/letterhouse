@@ -2,6 +2,7 @@
 import type { Letter, Site } from 'letterhouse'
 
 import LetterAction from './LetterAction.astro'
+import LetterShareAction from './LetterShareAction.astro'
 import MarginSection from './MarginSection.astro'
 
 export interface Props {
@@ -9,41 +10,43 @@ export interface Props {
   site: Site
 }
 
-const { letter, site } = Astro.props as Props
+const { letter } = Astro.props as Props
+const getMailTo = (subject: string) =>
+  `mailto:${letter.authors
+    .map(({ address }) => address.email)
+    .join(',')}?subject=${subject}`
+const published = letter.status === 'published'
+const contactSubject = !published
+  ? letter.title
+    ? `your preview of "${letter.title}"`
+    : 'your preview note'
+  : letter.title
+  ? `re: ${letter.title}`
+  : `re: your note from ${letter.dated}`
+
+// TODO: improve share text
+const shareText = letter.title || 'Note'
 ---
 
 <MarginSection class='letterActions'>
   <nav>
-    {!letter.dated ? (
-      <>
-        <h3>This draft</h3>
-        <LetterAction href="#" label="Suggest a change" icon="pencil" />
-        <LetterAction
-          href={`mailto:${letter.authors
-            .map(({ address }) => address.email)
-            .join(',')}`}
-          label="Contact author"
-          icon="paper-plane"
-        />
-      </>
-    ) : (
-      <>
-        <h3>This letter</h3>
-        <LetterAction
-          href={`mailto:${letter.authors
-            .map(({ address }) => address.email)
-            .join(',')}`}
-          label="Reply"
-          icon="paper-plane"
-        />
-        <LetterAction href="#" label="Share" icon="megaphone" />
-        <LetterAction href="#" label="Save" icon="box" />
-        <LetterAction href="#" label="Tip" icon="trophy" />
-        <h3>Letters To The Reader</h3>
-        <LetterAction href="#" label="View" icon="eye" />
-        <LetterAction href="#" label="Subscribe" icon="bell" />
-      </>
-    )}
+    <h3>What next?</h3>
+    <LetterAction
+      href={getMailTo(contactSubject)}
+      label={published ? 'Reply' : 'Send feedback'}
+      icon='paper-plane'
+    />
+    <!--
+      TODO: save a nostr-formatted event.json
+      <LetterAction href="#" label="Save" icon="box" />
+     -->
+    <!--
+      TODO: tipping using `window.webln`, falling back to a BOLT12 invoice
+      (once BOLT12 is supported by LND)
+      <LetterAction href='#' label='Tip' icon='trophy' />
+    -->
+    <LetterAction href='/rss.xml' label='Subscribe' icon='bell' />
+    {published && <LetterShareAction text={shareText} />}
   </nav>
 </MarginSection>
 
@@ -52,6 +55,7 @@ const { letter, site } = Astro.props as Props
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    margin-bottom: 2rem;
   }
 
   h3 {

@@ -38,11 +38,11 @@ const formattedDate = date && format(date, 'yyyy/LL/dd')
     )}
     {Boolean(letter.to.length) && (
       <div class="pair">
-        <h3>{toMyself && 'From and '}To</h3>
+        <h3>To</h3>
         <ul>
           {letter.to.map((address) => (
             <li>
-              <AddressChip value={address} />
+              <AddressChip value={address} relabelMyself={toMyself} />
             </li>
           ))}
         </ul>

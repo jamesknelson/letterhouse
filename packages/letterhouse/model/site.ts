@@ -3,9 +3,9 @@ import { Address } from './address'
 export interface Site {
   kind: 'site'
 
-  // Will be true if this is an unpublished version of the site, not meant for
+  // Will be true if this is an wip version of the site, not meant for
   // public consumption.
-  unpublished: boolean
+  wip: boolean
 
   author: Address
   blurb: string

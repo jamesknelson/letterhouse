@@ -22,7 +22,7 @@ export const menu = [
   //   href: '/address-book',
   // },
   {
-    label: 'About',
+    label: 'About Me',
     href: '/about',
   },
 ]

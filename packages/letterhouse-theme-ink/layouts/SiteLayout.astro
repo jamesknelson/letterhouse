@@ -16,14 +16,19 @@ export interface MenuItem {
 }
 
 const { hideBrand, site = await getSite() } = Astro.props as Props
-const { author, blurb = null, language, menu, title } = site
+const { author, blurb = null, language, menu, title, wip } = site
 ---
 
 <!DOCTYPE html>
 <html lang={language}>
   <head>
     <slot name='head'>
-      <SiteHead title={title} description={blurb} />
+      <SiteHead
+        siteTitle={title}
+        title={title}
+        description={blurb}
+        lightning={author.lightning}
+      />
     </slot>
   </head>
 
@@ -43,6 +48,11 @@ const { author, blurb = null, language, menu, title } = site
 
           <nav class='site-menu'>
             <ul>
+              {wip && (
+                <li class="wip">
+                  <a href="/wip">WIPs</a>
+                </li>
+              )}
               {menu.map((item) => (
                 <li>
                   <a href={item.href}>{item.label}</a>
@@ -113,7 +123,6 @@ const { author, blurb = null, language, menu, title } = site
 
   header {
     & > .inner {
-      height: 56px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -132,11 +141,18 @@ const { author, blurb = null, language, menu, title } = site
 
       @media (--large) {
         flex-direction: row;
+        height: 56px;
       }
     }
 
     border-bottom: 1px solid var(--color-surface-border);
-    margin-bottom: 1.5rem;
+
+    @media (--max-medium) {
+      margin-bottom: 0.5rem;
+    }
+    @media (--large) {
+      margin-bottom: 1.5rem;
+    }
 
     & .site-title {
       & h1 {
@@ -158,30 +174,53 @@ const { author, blurb = null, language, menu, title } = site
         margin: 0.5rem 0;
         opacity: 0.7;
       }
+
+      @media (--max-medium) {
+        margin-top: 1.25rem;
+        margin-bottom: 0.25rem;
+      }
     }
   }
 
   nav {
     display: flex;
+    margin: 0.25rem 0;
     border-width: 1px 0 1px 0;
+
     & ul,
     & li {
       flex-grow: 1;
       display: flex;
-      gap: 1rem;
+      justify-content: center;
       padding: 0;
       margin: 0;
-      justify-content: center;
+
+      @media (--large) {
+        gap: 1rem;
+      }
+
+      @media (--max-medium) {
+        flex-wrap: wrap;
+        line-height: 1rem;
+        margin: 0.25rem;
+      }
     }
 
     & a {
       color: var(--color-primary);
-      font-size: 1rem;
       padding: 0.5rem;
+      text-transform: uppercase;
+      line-height: 0;
+      letter-spacing: 1px;
+      font-size: 13px;
 
       &:hover {
         color: var(--color-secondary);
       }
+    }
+
+    & li.wip a:hover {
+      color: rgb(var(--rgb-tertiary));
     }
   }
 

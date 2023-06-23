@@ -5,6 +5,7 @@ import LetterFull from '../components/LetterFull.astro'
 import LetterHead from '../components/LetterHead.astro'
 import MarginLetterActions from '../components/MarginLetterActions.astro'
 import SiteLayout from './SiteLayout.astro'
+import MarginWorkInProgressIndicator from '../components/MarginWorkInProgressIndicator.astro'
 
 export interface Props {
   letter: Letter
@@ -15,7 +16,10 @@ const { letter, site } = Astro.props as Props
 ---
 
 <SiteLayout>
-  <LetterHead letter={letter} slot='head' />
+  <LetterHead letter={letter} siteTitle={site.title} slot='head' />
   <LetterFull letter={letter} />
   <MarginLetterActions letter={letter} site={site} slot='margin' />
+  {letter.status !== 'published' && (
+    <MarginWorkInProgressIndicator slot="margin" />
+  )}
 </SiteLayout>

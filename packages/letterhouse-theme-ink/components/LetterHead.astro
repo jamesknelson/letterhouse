@@ -5,12 +5,17 @@ import SiteHead from './SiteHead.astro'
 
 export interface Props {
   letter: Letter
+  siteTitle: string
 }
 
-const { letter } = Astro.props
+const { letter, siteTitle } = Astro.props
 ---
 
 <SiteHead
+  siteTitle={siteTitle}
   title={letter.title ?? `Letter from James, dated ${letter.dated}`}
   description={letter.blurb}
+  lightning={letter.authors.length === 1
+    ? letter.authors[0].address.lightning
+    : undefined}
 />

@@ -2,25 +2,43 @@
 import Icon from './Icon.astro'
 
 export interface Props {
-  href: string
+  href?: string
   icon: string
   label: string
+  type?: string
 }
 
-const { icon, href, label } = Astro.props
+const { icon, href, label, type } = Astro.props
 ---
 
-<a href={href}>
-  <Icon class="icon" name={icon} />
-  {label}
-</a>
+{href ? (
+  <a href={href} data-type={type}>
+    <Icon class="icon" name={icon} />
+    {label}
+  </a>
+) : (
+  <button type="button" data-type={type}>
+    <Icon class="icon" name={icon} />
+    {label}
+  </button>
+)}
 
 <style>
-  a {
-    display: flex;
+  a,
+  button {
     flex-grow: 1;
+    display: flex;
+    align-items: center;
+
     color: rgba(var(--rgb-primary));
+    cursor: pointer;
+
     text-decoration: none;
+
+    background-color: transparent;
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
   }
   .icon {
     width: 1.5rem;
@@ -28,7 +46,8 @@ const { icon, href, label } = Astro.props
     margin-right: 0.75rem;
   }
 
-  a:hover {
+  a:hover,
+  button:hover {
     color: var(--color-secondary);
 
     & .icon {

@@ -1,0 +1,107 @@
+---
+import LetterAction from './LetterAction.astro'
+
+export interface Props {
+  text: string
+}
+
+const { text } = Astro.props as Props
+---
+
+<LetterAction label='Share' icon='megaphone' type='share-action' />
+
+<div class='toast' id='share-toast' role='alert'></div>
+
+<script define:vars={{ text }}>
+  const share = { text }
+  const toast = document.getElementById('share-toast')
+
+  const animate = (...args) =>
+    new Promise((resolve, reject) => {
+      const animation = toast.animate(...args)
+      animation.oncancel = reject
+      animation.onfinish = resolve
+      animation.onremove = reject
+    })
+
+  let isAnimating = false
+
+  async function handleShareRequest() {
+    const canShare =
+      navigator.canShare && navigator.share && navigator.canShare(share)
+
+    try {
+      if (canShare()) {
+        await navigator.share(share)
+      } else {
+        throw 'fail'
+      }
+    } catch {
+      try {
+        await navigator.clipboard.writeText(share.text)
+
+        if (isAnimating) {
+          return
+        }
+
+        const animationPromise = animate(
+          [
+            { opacity: 0, transform: 'translateY(100%) scale(0.6)' },
+            { opacity: 1, transform: 'translateY(0) scale(1)' },
+          ],
+          {
+            duration: 300,
+            easing: 'ease-out',
+          },
+        )
+
+        isAnimating = true
+        toast.innerHTML = '<div>Copied to clipboard!</div>'
+
+        await animationPromise
+        await new Promise((resolve) => setTimeout(resolve, 3000))
+        await animate(
+          [
+            { opacity: 1, transform: 'translateY(0) scale(1)' },
+            { opacity: 0, transform: 'translateY(100%) scale(0.6)' },
+          ],
+          {
+            duration: 300,
+            easing: 'ease-in',
+          },
+        )
+
+        toast.innerHTML = ''
+        isAnimating = false
+      } catch {}
+    }
+  }
+
+  const buttons = document.querySelectorAll('[data-type="share-action"]')
+  for (button of buttons) {
+    button.addEventListener('click', handleShareRequest)
+  }
+</script>
+
+<style>
+  .toast {
+    z-index: 10;
+    position: fixed;
+    left: 0;
+    bottom: 1.5rem;
+    pointer-events: none;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+  }
+  .toast > :global(div) {
+    background-color: var(--color-primary);
+    box-shadow: 0 0 2px 0px rgba(var(--rgb-primary-wash), 0.75),
+      0 0 10px rgba(var(--rgb-primary-wash), 0.75),
+      0 0 10px rgba(var(--rgb-primary-wash), 0.33) inset;
+    color: var(--color-on-primary);
+    padding: 0.5rem 1.5rem;
+    border-radius: 99px;
+  }
+</style>

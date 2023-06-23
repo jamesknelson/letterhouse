@@ -18,7 +18,7 @@ export const defaultPages = {
   '/address-book': './pages/address-book/index.astro',
   '/address-book/[slug]': './pages/address-book/[slug].astro',
 
-  '/unpublished': './pages/unpublished.astro',
+  '/wip': './pages/wip.astro',
   '/draft/[slug]': './pages/draft/[slug].astro',
   '/preview/[slug]': './pages/preview/[slug].astro',
 

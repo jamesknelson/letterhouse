@@ -10,7 +10,7 @@
 
   --rgb-primary: 30, 60, 91;
   --color-primary: rgb(var(--rgb-primary));
-  --rgb-on-primary: 3, 7, 10;
+  --rgb-on-primary: 251, 252, 255;
   --color-on-primary: rgb(var(--rgb-on-primary));
   --rgb-primary-wash: 242, 246, 253;
   --color-primary-wash: rgb(var(--rgb-primary-wash));
@@ -25,6 +25,9 @@
   --color-secondary-wash: rgb(var(--rgb-secondary-wash));
   --rgb-on-secondary-wash: 0, 6, 40;
   --color-on-secondary-wash: rgb(var(--rgb-on-secondary-wash));
+
+  --rgb-tertiary: 255, 80, 27;
+  --color-tertiary: rgb(var(--rgb-tertiary));
 
   --rgb-surface: 255, 255, 255;
   --color-surface: rgb(var(--rgb-surface));

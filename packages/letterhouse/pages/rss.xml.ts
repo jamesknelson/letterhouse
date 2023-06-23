@@ -15,7 +15,7 @@ export const get: APIRoute = async (context) => {
   const published = await getPublished()
 
   return rss({
-    stylesheet: '/rss/styles.xsl',
+    stylesheet: '/rss.xsl',
     title: site.title,
     description: site.blurb,
     site: siteURL,

@@ -12,12 +12,12 @@ const draftsPromise = getDrafts()
 const previewsPromise = getPreviews()
 
 const site = await getSite()
-const unpublished = [await draftsPromise, await previewsPromise].flat()
+const wip = [await draftsPromise, await previewsPromise].flat()
 ---
 
-{site.unpublished && (
+{site.wip && (
   <SiteLayout site={site}>
-    <BlurbList letters={unpublished} />
+    <BlurbList letters={wip} />
     <MarginIntro site={site} slot="margin" />
   </SiteLayout>
 )}

@@ -16,11 +16,9 @@ export function isSiteModule(
   return validateSiteModule(maybeSiteModule).length === 0
 }
 
-export function getSiteFromModule(
-  siteModule: Omit<SiteModule, 'unpublished'>,
-): Site {
+export function getSiteFromModule(siteModule: Omit<SiteModule, 'wip'>): Site {
   return {
-    unpublished: import.meta.env.MODE === 'development',
+    wip: import.meta.env.MODE === 'development',
     ...siteModule,
   }
 }

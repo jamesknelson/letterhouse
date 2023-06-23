@@ -7,6 +7,7 @@ export interface Address {
   email?: string
   twitter?: string
   blurb?: string
+  lightning?: string
   avatarURL: string
   siteURL?: string // Could be a twitter if that's all they've got
   Notes?: AstroContent

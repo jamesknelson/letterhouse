@@ -1,0 +1,28 @@
+---
+import MarginSection from './MarginSection.astro'
+---
+
+<MarginSection class='letterActions'>
+  <h3>Work in progress</h3>
+  <p>
+    This piece is not yet complete. Please use consideration in who you share
+    with.
+  </p>
+</MarginSection>
+
+<style>
+  h3 {
+    color: rgba(var(--rgb-tertiary), var(--opacity-peripheral));
+    margin-top: 7px;
+    margin-bottom: -0.5rem;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  p {
+    margin: 1rem 0;
+    font-size: 15px;
+    color: rgba(var(--rgb-tertiary), var(--opacity-alt));
+  }
+</style>
