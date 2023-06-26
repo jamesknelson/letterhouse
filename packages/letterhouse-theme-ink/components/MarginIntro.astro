@@ -11,9 +11,9 @@ export interface Props {
 const { site } = Astro.props as Props
 ---
 
-<MarginSection class="author">
+<MarginSection class='author'>
   <Avatar
-    class="avatar"
+    class='avatar'
     size={128}
     name={site.author.name}
     url={site.author.avatarURL}
@@ -22,6 +22,8 @@ const { site } = Astro.props as Props
 </MarginSection>
 <style>
   .author {
+    align-items: center;
+
     & .avatar {
       margin-bottom: 1rem;
     }

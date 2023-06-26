@@ -14,9 +14,9 @@ export interface Props {
 const { letter } = Astro.props as Props
 ---
 
-<Article class="letter brief">
+<Article class='letter brief'>
   <LetterMeta letter={letter} />
-  <div class="LetterHeader block">
+  <div class='LetterHeader block'>
     <a href={url.letter(letter)}>
       {letter.title && <h2 class="letter-title">{letter.title}</h2>}
       {letter.blurb && <Blurb blurb={letter.blurb} />}
@@ -24,8 +24,8 @@ const { letter } = Astro.props as Props
   </div>
 
   <footer>
-    <div class="block vm-none">
-      <a class="read-and-reply" href={url.letter(letter)}
+    <div class='block vm-none'>
+      <a class='read-and-reply' href={url.letter(letter)}
         >Read {!!letter.wordCount ? (
           <span class="count">
             (around {roundWordCount(letter.wordCount)} words)
@@ -108,8 +108,14 @@ const { letter } = Astro.props as Props
       font-size: 1.5rem;
       line-height: 2rem;
       font-weight: 600;
-      margin-top: 2rem;
       color: var(--color-primary);
+
+      @media (--max-medium) {
+        margin-top: 1.5rem;
+      }
+      @media (--large) {
+        margin-top: 2rem;
+      }
     }
 
     & .placeholder {
@@ -122,7 +128,12 @@ const { letter } = Astro.props as Props
   }
 
   footer {
-    padding: 0 0 2rem;
+    @media (--max-medium) {
+      padding: 0 0 1.5rem;
+    }
+    @media (--large) {
+      padding: 0 0 2rem;
+    }
 
     & .read-and-reply {
       color: rgba(var(--rgb-primary), var(--opacity-alt));

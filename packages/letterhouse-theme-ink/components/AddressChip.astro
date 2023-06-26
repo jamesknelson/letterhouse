@@ -68,5 +68,10 @@ const { relabelMyself, value } = Astro.props as Props
     margin: 2px;
     margin-right: 8px;
     border-radius: 99px;
+
+    @media (--max-medium) {
+      margin: 1px;
+      margin-right: 8px;
+    }
   }
 </style>
