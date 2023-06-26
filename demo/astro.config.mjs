@@ -9,5 +9,5 @@ export default defineConfig({
       theme,
     }),
   ],
-  site: 'https://letter.house',
+  site: 'https://jamesknelson.com',
 })

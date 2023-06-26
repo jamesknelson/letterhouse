@@ -1,5 +1,6 @@
 ---
-import type { Letter, Site } from 'letterhouse'
+import { join } from 'path'
+import { url, type Letter, type Site } from 'letterhouse'
 
 import LetterAction from './LetterAction.astro'
 import LetterShareAction from './LetterShareAction.astro'
@@ -24,8 +25,13 @@ const contactSubject = !published
   ? `re: ${letter.title}`
   : `re: your note from ${letter.dated}`
 
-// TODO: improve share text
-const shareText = letter.title || 'Note'
+const shareText = [
+  letter.title || `Note from ${letter.dated}`,
+  letter.blurb,
+  join(Astro.site?.toString() || '', url.letter(letter)),
+]
+  .filter(Boolean)
+  .join('\n\n')
 ---
 
 <MarginSection class='letterActions'>

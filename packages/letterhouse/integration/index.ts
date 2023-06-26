@@ -3,7 +3,6 @@ import type { AstroIntegration } from 'astro'
 import type { Theme } from '../model/theme'
 
 import mdxIntegration from '@astrojs/mdx'
-import rss from '@astrojs/rss'
 import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import postCSSImport from 'postcss-import'
