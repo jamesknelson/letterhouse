@@ -1,3 +1,4 @@
+import type { AstroComponentFactory } from 'astro/dist/runtime/server'
 import { Address } from './address'
 
 export interface Site {
@@ -13,6 +14,8 @@ export interface Site {
   title: string
 
   menu: SiteMenu
+
+  intro: AstroComponentFactory
 }
 
 export type SiteMenu = SiteMenuItem[]

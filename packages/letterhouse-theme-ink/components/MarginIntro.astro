@@ -22,7 +22,9 @@ const { site } = Astro.props as Props
 </MarginSection>
 <style>
   .author {
-    align-items: center;
+    @media (--max-medium) {
+      align-items: center;
+    }
 
     & .avatar {
       margin-bottom: 1rem;
