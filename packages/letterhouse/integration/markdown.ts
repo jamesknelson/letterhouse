@@ -66,7 +66,6 @@ function rehypeQuotes(): RehypePlugin {
           const quote = {
             index,
             text,
-            work: {},
           }
 
           data.astro.frontmatter.quotes.push(quote)
@@ -115,10 +114,15 @@ function rehypeQuotes(): RehypePlugin {
             return
           }
 
-          const work =
+          const quote =
             data.astro.frontmatter.quotes[
               data.astro.frontmatter.quotes.length - 1
-            ].work
+            ]
+          const work = quote.work || {}
+
+          if (!quote.work) {
+            quote.work = work
+          }
 
           for (const [key, value] of pairs) {
             work[key] = value
