@@ -1,6 +1,6 @@
 {
   "name": "letterhouse",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "The Letterhouse publishing toolkit",
   "type": "module",
   "exports": {
