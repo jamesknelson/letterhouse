@@ -6,7 +6,8 @@ export function letter(letter: Letter): string {
     '',
     ...(letter.collection === 'inbox' ? ['inbox'] : []),
     letter.status === 'published' ? letter.dated : letter.status,
-    letter.slug,
+    ...(letter.slug ? [letter.slug] : []),
+    '',
   ].join('/')
 }
 

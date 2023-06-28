@@ -15,14 +15,14 @@ export const menu = [
   },
   // {
   //   label: 'Inbox',
-  //   href: '/inbox',
+  //   href: '/inbox/',
   // },
   // {
   //   label: 'Address Book',
-  //   href: '/address-book',
+  //   href: '/address-book/',
   // },
   {
     label: 'About Me',
-    href: '/about',
+    href: '/about/',
   },
 ]
