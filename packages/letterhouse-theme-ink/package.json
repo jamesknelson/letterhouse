@@ -1,6 +1,6 @@
 {
   "name": "letterhouse-theme-ink",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "A simple theme for the Letterhouse publishing toolkit",
   "type": "module",
   "exports": {
