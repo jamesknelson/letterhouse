@@ -28,4 +28,4 @@ export interface Props {
 const { letter, site } = Astro.props as Props
 ---
 
-<LetterLayout letter={letter} site={site} />
+{site.wip && <LetterLayout letter={letter} site={site} />}
