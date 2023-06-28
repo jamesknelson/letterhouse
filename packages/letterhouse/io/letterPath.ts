@@ -57,11 +57,11 @@ const extractables: Extractable[] = [
     property: 'dated',
   },
   {
-    pattern: /(?:^|-)to-((?:(?!--).)+)(?:--(.+))?$/,
+    pattern: /(?:^|-)to-((?:(?!-re-).)+)(?:-re-(.+))?$/,
     property: 'to',
   },
   {
-    pattern: /(?:^|-)from-((?:(?!--).)+)(?:--(.+))?$/,
+    pattern: /(?:^|-)from-((?:(?!-re-).)+)(?:-re-(.+))?$/,
     property: 'from',
   },
 ]
