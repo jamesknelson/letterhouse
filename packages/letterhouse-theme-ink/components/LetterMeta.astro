@@ -23,19 +23,6 @@ const formattedDate = date && format(date, 'yyyy/LL/dd')
 ---
 
 <header>
-  <div class='date'>
-    {letter.status === 'published' ? (
-      formattedDate ? (
-        <time datetime={formattedDate} class="date">
-          {formattedDate}
-        </time>
-      ) : null
-    ) : (
-      <a class={letter.status} href={url.draftIndex()}>
-        {letter.status}
-      </a>
-    )}
-  </div>
   <div class='address'>
     {!toMyself && letter.collection !== 'inbox' && (
       <div class="pair">
@@ -94,12 +81,22 @@ const formattedDate = date && format(date, 'yyyy/LL/dd')
       </ul>
     </div>
   )}
+  <div class='date'>
+    {letter.status === 'published' ? (
+      formattedDate ? (
+        <time datetime={formattedDate}>{formattedDate}</time>
+      ) : null
+    ) : (
+      <a class={letter.status} href={url.draftIndex()}>
+        {letter.status}
+      </a>
+    )}
+  </div>
 </header>
 
 <style>
   header {
-    border-bottom: 1px solid var(--color-surface-line);
-    padding: 0.75rem var(--dim-block-margin-horizontal) 0.75rem;
+    position: relative;
   }
 
   h3 {
@@ -125,6 +122,8 @@ const formattedDate = date && format(date, 'yyyy/LL/dd')
 
   .address {
     display: flex;
+    border-bottom: 1px solid var(--color-surface-line);
+    padding: 0.75rem var(--dim-block-margin-horizontal) 0.75rem;
     @media (--max-medium) {
       flex-wrap: wrap;
       align-items: stretch;
@@ -215,22 +214,29 @@ const formattedDate = date && format(date, 'yyyy/LL/dd')
   }
 
   .date {
+    display: flex;
     flex-grow: 1;
     justify-content: flex-start;
-    align-items: flex-end;
-    position: relative;
-    & h3 {
-      display: none;
-    }
+    align-items: flex-start;
+    padding: 0 var(--dim-block-margin-horizontal);
+
     & time,
     a {
-      position: absolute;
-      right: 0;
       font-size: 0.8rem;
       text-transform: uppercase;
       line-height: 0.8rem;
       font-weight: 500;
       letter-spacing: 1px;
+    }
+
+    @media (--max-medium) {
+      margin: 1.25rem 0 -0.25rem;
+    }
+
+    @media (--large) {
+      position: absolute;
+      top: 0.75rem;
+      right: 0;
     }
   }
 </style>
