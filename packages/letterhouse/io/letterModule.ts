@@ -82,6 +82,7 @@ export function isLetterContent(
 export async function getLetterFromModuleAndPath(
   module: LetterModule,
   path: LetterPath,
+  modifiedTime: Date,
 ): Promise<Letter> {
   const {
     id,
@@ -190,6 +191,7 @@ export async function getLetterFromModuleAndPath(
     to,
     cc,
     re,
+    modifiedTime,
     wordCount,
     quotes,
     blurb,

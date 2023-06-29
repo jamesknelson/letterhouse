@@ -2,17 +2,14 @@
 import '../styles/_root.css'
 import '../styles/_global.css'
 
-import { getDrafts, getPreviews, getSite } from 'letterhouse'
+import { getSite, getWIP } from 'letterhouse'
 
 import BlurbList from '../components/BlurbList.astro'
 import MarginIntro from '../components/MarginIntro.astro'
 import SiteLayout from '../layouts/SiteLayout.astro'
 
-const draftsPromise = getDrafts()
-const previewsPromise = getPreviews()
-
 const site = await getSite()
-const wip = [await draftsPromise, await previewsPromise].flat()
+const wip = await getWIP()
 ---
 
 {site.wip && (

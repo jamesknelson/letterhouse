@@ -1,4 +1,7 @@
 import mem from 'mem'
+import { stat } from 'node:fs/promises'
+import { resolve } from 'node:path'
+import { cwd } from 'node:process'
 
 import { type Letter } from '../model/letter'
 import { NotFoundError } from '../utils/notFoundError'
@@ -26,6 +29,7 @@ export function getReceived(): Promise<Letter[]> {
   return collate(
     [...getLetterLoaderMap().values()],
     (letter) => letter.collection === 'inbox',
+    createDatedOrder(new Date()),
   )
 }
 
@@ -33,6 +37,7 @@ export async function getDrafts(): Promise<Letter[]> {
   return collate(
     [...getLetterLoaderMap().values()],
     (letter) => letter.collection !== 'inbox' && letter.status === 'draft',
+    modifiedOrder,
   )
 }
 
@@ -40,13 +45,21 @@ export async function getPreviews(): Promise<Letter[]> {
   return collate(
     [...getLetterLoaderMap().values()],
     (letter) => letter.collection !== 'inbox' && letter.status === 'preview',
+    modifiedOrder,
   )
+}
+
+export async function getWIP(): Promise<Letter[]> {
+  const draftsPromise = getDrafts()
+  const previewsPromise = getPreviews()
+  return [await previewsPromise, await draftsPromise].flat()
 }
 
 export async function getPublished(): Promise<Letter[]> {
   return collate(
     [...getLetterLoaderMap().values()],
     (letter) => letter.collection !== 'inbox' && letter.status === 'published',
+    createDatedOrder(new Date()),
   )
 }
 
@@ -69,15 +82,18 @@ const getLetterLoaderMap: {
 
 async function collate(
   letterPromises: (() => Promise<Letter>)[],
-  predicate?: (letter: Letter) => boolean,
+  predicate: (letter: Letter) => boolean,
+  order: (x: Letter, y: Letter) => number,
 ): Promise<Letter[]> {
   const letters = await Promise.all(letterPromises.map((loader) => loader()))
-  const now = new Date()
-  return (!predicate ? letters : letters.filter(predicate)).sort(
-    (x, y) =>
-      new Date(y.dated || now).getTime() - new Date(x.dated || now).getTime(),
-  )
+  return (!predicate ? letters : letters.filter(predicate)).sort(order)
 }
+
+const createDatedOrder = (now: Date) => (x: Letter, y: Letter) =>
+  new Date(y.dated || now).getTime() - new Date(x.dated || now).getTime()
+
+const modifiedOrder = (x: Letter, y: Letter) =>
+  new Date(y.modifiedTime).getTime() - new Date(x.modifiedTime).getTime()
 
 function getLetterLoaderEntry([path, module]: readonly [string, any]) {
   const letterPath = parseLetterPath(path)
@@ -86,7 +102,10 @@ function getLetterLoaderEntry([path, module]: readonly [string, any]) {
     if (!isLetterContent(letterContent)) {
       throw validateLetterModule(letterContent).join('\n')
     }
-    return getLetterFromModuleAndPath(letterContent, letterPath)
+    const cwd = process.cwd()
+    const fullPath = resolve(path, cwd)
+    const { mtime } = await stat(fullPath)
+    return getLetterFromModuleAndPath(letterContent, letterPath, mtime)
   }
 
   return [letterPath.id, mem(loader)] as const

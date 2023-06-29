@@ -40,6 +40,7 @@ export interface Letter {
   // rendered above the content (and after any title).
   blurb: string | null
 
+  modifiedTime: Date
   wordCount: number
 
   quotes: LetterQuote[]
