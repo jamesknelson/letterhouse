@@ -1,6 +1,6 @@
 import mem from 'mem'
 import { stat } from 'node:fs/promises'
-import { resolve } from 'node:path'
+import { join } from 'node:path'
 import { cwd } from 'node:process'
 
 import { type Letter } from '../model/letter'
@@ -102,8 +102,7 @@ function getLetterLoaderEntry([path, module]: readonly [string, any]) {
     if (!isLetterContent(letterContent)) {
       throw validateLetterModule(letterContent).join('\n')
     }
-    const cwd = process.cwd()
-    const fullPath = resolve(path, cwd)
+    const fullPath = join(cwd(), path)
     const { mtime } = await stat(fullPath)
     return getLetterFromModuleAndPath(letterContent, letterPath, mtime)
   }
