@@ -31,7 +31,7 @@ const { text } = Astro.props as Props
       navigator.canShare && navigator.share && navigator.canShare(share)
 
     try {
-      if (canShare()) {
+      if (canShare) {
         await navigator.share(share)
       } else {
         throw 'fail'
