@@ -1,5 +1,4 @@
 ---
-import { join } from 'path'
 import { url, type Letter, type Site } from 'letterhouse'
 
 import LetterAction from './LetterAction.astro'
@@ -28,7 +27,7 @@ const contactSubject = !published
 const shareText = [
   letter.title || `Note from ${letter.dated}`,
   letter.blurb,
-  join(Astro.site?.toString() || '', url.letter(letter)),
+  Astro.site?.toString() + url.letter(letter).slice(1),
 ]
   .filter(Boolean)
   .join('\n\n')
