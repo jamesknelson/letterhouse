@@ -30,7 +30,8 @@ export const defaultStylesheets = {
   root: './styles/_root.css',
 }
 export const defaultLayouts = {
-  default: './layouts/SiteLayout.astro',
+  site: './layouts/SiteLayout.astro',
+  page: './layouts/PageLayout.astro',
 }
 
 export type ThemeDefinition = Partial<Theme>
